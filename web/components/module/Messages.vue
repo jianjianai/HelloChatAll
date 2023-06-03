@@ -1,5 +1,5 @@
 <script setup>
-import {inject, reactive, ref} from 'vue';
+import { inject, markRaw, reactive, ref } from 'vue';
 import AiMakerDownMessage from './Messagebubbles/AiMakerDownMessage.vue';
 import AiErrorMessage from './Messagebubbles/AiErrorMessage.vue';
 import UserMessage from './Messagebubbles/UserMessage.vue';
@@ -14,12 +14,17 @@ function getNextMessageId() {
   return messageNextId++;
 }
 
-function addNewBaseMessage(type, message) {
+/**
+ * 
+ * @param {组件} type 
+ * @param {对象} data 
+ */
+function addNewBaseMessage(type, data) {
   let id = getNextMessageId();
   let theMessage = reactive({
     id: id,
-    type: type,
-    message: message,
+    type: markRaw(type),
+    data: reactive(data),
     delete() {//删除当前消息
       delete messages[this.id];
     }
@@ -35,20 +40,25 @@ defineExpose({
    * 添加一条AI发送的makerdown消息
    */
   addAiMakerDownMessage(message) {
-    return addNewBaseMessage("AiMakerDownMessage", message)
+    return addNewBaseMessage(AiMakerDownMessage, {
+      message
+    })
   },
   /**
    * 添加一条错误消息
    */
   addAiErrorMessage(message) {
-    return addNewBaseMessage("AiErrorMessage", message)
+    return addNewBaseMessage(AiErrorMessage, {
+      message
+    })
   },
   /**
    * 添加一条用户消息,默认是预览状态
    */
   addUserMessage(message) {
-    let theMessage = addNewBaseMessage("UserMessage", message);
-    theMessage.isPreview = true;
+    let theMessage = addNewBaseMessage(UserMessage, {
+      message, isPreview: true
+    })
     return theMessage;
   }
 });
@@ -63,20 +73,13 @@ defineExpose({
         <slot></slot>
       </div>
       <div class="messagesBox" v-for="message in messages" :key="message.id">
-        <AiMakerDownMessage v-if="message.type === 'AiMakerDownMessage'" :message=message.message>
-        </AiMakerDownMessage>
-        <AiErrorMessage v-else-if="message.type === 'AiErrorMessage'" :message=message.message>
-        </AiErrorMessage>
-        <UserMessage v-else-if="message.type === 'UserMessage'" :message=message.message
-                     :is-preview=message.isPreview>
-        </UserMessage>
+        <component :is="message.type" :data="message.data"></component>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-
 .box {
   height: 100%;
   display: flex;

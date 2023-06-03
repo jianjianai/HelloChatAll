@@ -3,6 +3,9 @@ import Input from './module/Input.vue';
 import Message from './module/Messages.vue';
 import { ref } from 'vue';
 
+const props = defineProps({
+  chatAI:Object
+});
 const messageApi = ref();
 const inputApi = ref();
 
@@ -22,8 +25,8 @@ function onSendMessage(message) {
   if (!sendingMessage) {
     sendingMessage = messageApi.value.addUserMessage(message);
   }
-  sendingMessage.message = message;
-  sendingMessage.isPreview = false;
+  sendingMessage.data.message = message;
+  sendingMessage.data.isPreview = false;
   sendingMessage = undefined;
 
   console.log("send", message)
@@ -39,7 +42,7 @@ function onInputMessage(message) {
     if (!sendingMessage) {
       sendingMessage = messageApi.value.addUserMessage(message);
     }
-    sendingMessage.message = message;
+    sendingMessage.data.message = message;
   } else {
     if (sendingMessage) {
       sendingMessage.delete();
@@ -54,7 +57,9 @@ function onInputMessage(message) {
 <template>
   <div class="chatbox">
     <div class="message">
-      <Message ref=messageApi></Message>
+      <Message ref=messageApi>
+        <component :is="props.chatAI.chatVue"></component>
+      </Message>
     </div>
     <div class="imput">
       <Input ref=inputApi @onSendMessage=onSendMessage @onInputMessage=onInputMessage></Input>

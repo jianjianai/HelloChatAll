@@ -1,9 +1,16 @@
 <script setup>
-import Select from "./components/Select.vue"
-import Chat from "./components/Chat.vue"
-import StatusBar from "./components/StatusBar.vue";
-import { provide, reactive } from 'vue';
+import Select from "./Select.vue"
+import Chat from "./Chat.vue"
+import StatusBar from "./StatusBar.vue";
+import { provide, reactive, ref } from 'vue';
+import GearFill from "../icon/GearFill.vue"
+import UserCharAi from "../class/UserCharAi";
+import ChatDotsFill from "../icon/ChatDotsFill.vue";
 
+const chatAI = UserCharAi.getUseChatAi();
+const chatAiArray = UserCharAi.getChatAiArray();
+const setupVue = ref(chatAI.setUpVue);
+const openSetUp = ref(false);
 let themeColor = reactive({
   r: 0,
   g: 140,
@@ -33,7 +40,21 @@ provide("themeColor", themeColor);
       </div>
       <!-- 右边部分 -->
       <div class="right">
-        <Chat></Chat>
+
+        <GearFill class="setUp rotate" v-show="!openSetUp" @click="openSetUp = !openSetUp"></GearFill>
+        <ChatDotsFill class="setUp" v-show="openSetUp" @click="openSetUp = !openSetUp">
+        </ChatDotsFill>
+
+        <!-- 设置和聊天组件 -->
+        <TransitionGroup name="rightTransition">
+          <template v-for="ai of chatAiArray" :key="ai.id+'-setUp'">
+            <component :is="ai.setUpVue" v-show="openSetUp && ai.id === chatAI.id"></component>
+          </template>
+          <template v-for="ai of chatAiArray" :key="ai.id+'-Chat'">
+            <Chat v-show="!openSetUp && ai.id === chatAI.id" :chatAI="ai"></Chat>
+          </template>
+        </TransitionGroup>
+
       </div>
     </div>
   </div>
@@ -45,6 +66,27 @@ provide("themeColor", themeColor);
 
 <!-- 标题 -->
 <style scoped>
+/* 动画 */
+.rightTransition-enter-active {
+  position: absolute;
+  transition: all 0.5s ease;
+}
+
+.rightTransition-leave-active {
+  position: absolute;
+  transition: all 1s ease;
+}
+
+.rightTransition-enter-from {
+  opacity: 0;
+  transform: translateY(100%) scale(120%);
+}
+
+.rightTransition-leave-to {
+  opacity: 0;
+  transform: translateY(-60%) scale(80%);
+}
+
 /* 主页面 */
 .outset {
   position: fixed;
@@ -82,6 +124,7 @@ provide("themeColor", themeColor);
   margin: 0.5rem;
 }
 
+
 .left::-webkit-scrollbar,
 .right::-webkit-scrollbar {
   width: 0.5rem;
@@ -111,6 +154,7 @@ provide("themeColor", themeColor);
   border-radius: 0.2rem 0.2rem 0.5rem 0.2rem;
   margin: 0.3rem 0.5rem 0.5rem 0;
   overflow: hidden;
+  position: relative;
 }
 
 .top {
@@ -120,6 +164,36 @@ provide("themeColor", themeColor);
   flex-direction: row;
   align-items: center;
   border-radius: 0.5rem 0.5rem 0.2rem 0.2rem;
+}
+
+.setUp {
+  color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},80%)`');
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 1.7rem;
+  width: 1.7rem;
+  margin: 0.5rem;
+  cursor: pointer;
+  transition: color 0.5s;
+}
+
+.rotate {
+  animation: 10s linear infinite running rotate;
+}
+
+.setUp:hover {
+  color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},100%)`');
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 背景 */

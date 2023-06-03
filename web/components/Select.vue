@@ -1,7 +1,7 @@
 <script setup>
 import { inject, ref } from "vue";
 import UserChatAi from "../class/UserCharAi"
-import ArrowLeftCircleFill from "./icon/ArrowLeftCircleFill.vue"
+import ArrowLeftCircleFill from "../icon/ArrowLeftCircleFill.vue"
 
 let isExpand = ref(true);
 let themeColor = inject("themeColor");

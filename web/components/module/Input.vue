@@ -1,6 +1,6 @@
 <script setup>
 import { inject, ref, watchEffect } from 'vue';
-import SendSvg from "../icon/send.vue"
+import SendSvg from "../../icon/send.vue"
 let themeColor = inject("themeColor");
 let emit = defineEmits(["onInputMessage", "onSendMessage"]);
 

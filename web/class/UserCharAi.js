@@ -1,4 +1,4 @@
-import { readonly, ref } from "vue";
+import { markRaw, readonly, ref } from "vue";
 import BingChat from "../components/chats/BingChat.vue";
 import BingChatSetUp from "../components/chats/BingChatSetUp.vue";
 
@@ -6,32 +6,32 @@ let aiList = [
   {
     id: "bing",
     name: "Bing Ai",
-    chatVue: BingChat,
-    setUpVue: BingChatSetUp,
+    chatVue: markRaw(BingChat),
+    setUpVue: markRaw(BingChatSetUp),
   },
   {
     id: "bing1",
     name: "Bing Ai",
-    chatVue: BingChat,
-    setUpVue: BingChatSetUp,
+    chatVue: markRaw(BingChat),
+    setUpVue: markRaw(BingChatSetUp),
   },
   {
     id: "bing2",
     name: "Bing Ai",
-    chatVue: BingChat,
-    setUpVue: BingChatSetUp,
+    chatVue: markRaw(BingChat),
+    setUpVue: markRaw(BingChatSetUp),
   },
   {
     id: "bing3",
     name: "Bing Ai",
-    chatVue: BingChat,
-    setUpVue: BingChatSetUp,
+    chatVue: markRaw(BingChat),
+    setUpVue: markRaw(BingChatSetUp),
   },
   {
     id: "bing4",
     name: "Bing Ai",
-    chatVue: BingChat,
-    setUpVue: BingChatSetUp,
+    chatVue: markRaw(BingChat),
+    setUpVue: markRaw(BingChatSetUp),
   },
 ];
 let userAi = ref(aiList[0]);

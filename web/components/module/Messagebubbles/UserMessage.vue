@@ -1,16 +1,16 @@
 <script setup>
 
 let props = defineProps({
-    message: String,//消息
-    isPreview: Boolean,//是否是预览
+    data:Object
 });
+let data = props.data;
 
 </script>
 
 <template>
     <div class="align">
-        <div class="bubble" v-bind:class="{ preview: props.isPreview }">
-            <div class="messageBox" v-text="props.message"></div>
+        <div class="bubble" v-bind:class="{ preview: data.isPreview }">
+            <div class="messageBox" v-text="data.message"></div>
         </div>
     </div>
 </template>

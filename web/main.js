@@ -1,6 +1,6 @@
 import "./assets/main.css";
 import { createApp } from "vue";
-import HelloChatAI from "./HelloChatAI.vue";
+import HelloChatAI from "./components/HelloChatAI.vue";
 
 // 配置marked
 import { marked } from "marked";

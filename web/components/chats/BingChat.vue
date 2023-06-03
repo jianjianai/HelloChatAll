@@ -4,6 +4,9 @@ defineExpose({
     start() {
 
     },
+    isStart(){
+
+    },
     stop() {
 
     },

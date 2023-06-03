@@ -5,12 +5,13 @@ import { marked } from 'marked';
 
 
 let props = defineProps({
-    message: String
+    data: Object
 });
+let data = props.data;
 let makerdom = ref("");
 
 watchEffect(() => {
-    makerdom.value = marked.parse(props.message);
+    makerdom.value = marked.parse(data.message);
 });
 </script>
 

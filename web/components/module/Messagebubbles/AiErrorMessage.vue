@@ -1,8 +1,8 @@
 <script setup>
 let props = defineProps({
-    message: String,
-    errorButtons: Array[{ text: String, fun: Function }]
+    data:Object
 });
+let data = props.data;
 
 </script>
 
@@ -10,7 +10,7 @@ let props = defineProps({
     <div class="bubble">
         <div class="messageBox">
             <div class="errorMessage">
-                {{ props.message }}
+                {{ data.message }}
             </div>
             <div class="errorButtons">
 
