@@ -2,24 +2,24 @@
 import { inject, ref, watchEffect } from 'vue';
 import SendSvg from "../icon/send.vue"
 let themeColor = inject("themeColor");
-let emit = defineEmits(["onInputMessage","onSendMessage"]);
+let emit = defineEmits(["onInputMessage", "onSendMessage"]);
 
 
 let inputText = ref("");
 
 
-watchEffect(()=>{
-    emit("onInputMessage",inputText.value);
+watchEffect(() => {
+    emit("onInputMessage", inputText.value);
 })
 
-function onSend(){
-    emit("onSendMessage",inputText.value);
+function onSend() {
+    emit("onSendMessage", inputText.value);
 }
 
 //暴露接口
 
 defineExpose({
-    setInputText(text){
+    setInputText(text) {
         inputText.value = text;
     }
 });
@@ -30,9 +30,11 @@ defineExpose({
     <div class="box">
         <div class="inputBox">
             <div class="inputBor">
-                <textarea v-model=inputText class="input"  placeholder="愉快地聊天吧！"></textarea>
+                <textarea v-model=inputText class="input" placeholder="愉快地聊天吧！"></textarea>
                 <div class="sendBox">
-                    <div class="send" @click="onSend"><SendSvg class="sendSvg"/>发送</div>
+                    <div class="send" @click="onSend">
+                        <SendSvg class="sendSvg" />发送
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,11 +42,12 @@ defineExpose({
 </template>
 
 <style scoped>
-.sendBox{
+.sendBox {
     display: flex;
     flex-direction: column-reverse;
 }
-.send{
+
+.send {
     border-radius: 0.5rem;
     font-size: 1rem;
     display: flex;
@@ -54,14 +57,16 @@ defineExpose({
     cursor: pointer;
     transition: background-color 0.5s;
 }
-.send:hover{
+
+.send:hover {
     background-color: v-bind('`rgba(${themeColor.r}, ${themeColor.g}, ${themeColor.b}, 0.6)`');
 }
-.sendSvg{
+
+.sendSvg {
     margin-right: 0.2rem;
 }
 
-.input{
+.input {
     flex: 1;
     resize: none;
     outline: none;
@@ -69,7 +74,8 @@ defineExpose({
     font-size: 1rem;
     background-color: rgba(255, 255, 255, 0);
 }
-.inputBor{
+
+.inputBor {
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -84,23 +90,27 @@ defineExpose({
     transition: background-color 0.5s;
     background-color: rgba(255, 255, 255, 0);
 }
-.inputBor:has(.input:focus-visible){
+
+.inputBor:has(.input:focus-visible) {
     background-color: rgba(255, 255, 255, 0.43);
     border: v-bind('`0.08rem solid rgba(${themeColor.r}, ${themeColor.g}, ${themeColor.b}, 0.8)`');
     padding: 0.47rem;
 }
-.inputBor:hover{
+
+.inputBor:hover {
     background-color: rgba(255, 255, 255, 0.43);
     border: v-bind('`0.05rem solid rgba(${themeColor.r}, ${themeColor.g}, ${themeColor.b}, 0.5)`');
 }
-.box{
+
+.box {
     height: 8rem;
     display: flex;
     align-items: stretch;
     flex-direction: row;
     flex-wrap: nowrap;
 }
-.inputBox{
+
+.inputBox {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -108,6 +118,4 @@ defineExpose({
     flex-wrap: nowrap;
     margin-left: 1rem;
     margin-right: 1rem;
-}
-
-</style>
+}</style>

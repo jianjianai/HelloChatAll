@@ -2,14 +2,14 @@
 import Select from "./components/Select.vue"
 import Chat from "./components/Chat.vue"
 import StatusBar from "./components/StatusBar.vue";
-import { provide, reactive, ref } from 'vue';
+import { provide, reactive } from 'vue';
 
 let themeColor = reactive({
   r: 0,
   g: 140,
   b: 220
 });
-provide("themeColor",themeColor);
+provide("themeColor", themeColor);
 
 
 </script>
@@ -45,11 +45,6 @@ provide("themeColor",themeColor);
 
 <!-- 标题 -->
 <style scoped>
-
-
-
-
-
 /* 主页面 */
 .outset {
   position: fixed;
@@ -72,7 +67,7 @@ provide("themeColor",themeColor);
   align-items: stretch;
   justify-content: space-between;
   flex: 1;
-  overflow:hidden;
+  overflow: hidden;
 }
 
 .left,
@@ -86,16 +81,19 @@ provide("themeColor",themeColor);
   background-color: rgba(255, 255, 255, 0.3);
   margin: 0.5rem;
 }
+
 .left::-webkit-scrollbar,
-.right::-webkit-scrollbar{
+.right::-webkit-scrollbar {
   width: 0.5rem;
   height: 100%;
 }
+
 .left::-webkit-scrollbar-thumb,
-.right::-webkit-scrollbar-thumb{
+.right::-webkit-scrollbar-thumb {
   background-color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},20%)`');
   border-radius: 1rem;
 }
+
 .left {
   display: flex;
   flex-direction: column;
@@ -107,14 +105,15 @@ provide("themeColor",themeColor);
   margin-right: 0.3rem;
   overflow-y: auto;
 }
+
 .right {
   flex: 1;
   border-radius: 0.2rem 0.2rem 0.5rem 0.2rem;
-  margin: 0.3rem 0.5rem 0.5rem 0rem;
+  margin: 0.3rem 0.5rem 0.5rem 0;
   overflow: hidden;
 }
 
-.top{
+.top {
   margin-bottom: 0;
   height: 2rem;
   display: flex;

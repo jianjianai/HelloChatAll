@@ -1,7 +1,7 @@
 <script setup>
 let props = defineProps({
-    message:String,
-    errorButtons:Array[{text:String,fun:Function}]
+    message: String,
+    errorButtons: Array[{ text: String, fun: Function }]
 });
 
 </script>
@@ -10,24 +10,25 @@ let props = defineProps({
     <div class="bubble">
         <div class="messageBox">
             <div class="errorMessage">
-                {{props.message}}
+                {{ props.message }}
             </div>
             <div class="errorButtons">
-                
+
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-.bubble{
+.bubble {
     display: flex;
     flex-direction: column;
     align-items: center;
     flex-wrap: nowrap;
     margin-bottom: 2rem;
 }
-.messageBox{
+
+.messageBox {
     border: 0.05rem solid rgba(255, 0, 0, 0.287);
     background-color: rgba(255, 255, 255);
     min-height: 2rem;
@@ -35,8 +36,8 @@ let props = defineProps({
     border-radius: 1rem;
     padding: 0.5rem;
 }
-.errorMessage{
+
+.errorMessage {
     color: red;
 }
-
 </style>

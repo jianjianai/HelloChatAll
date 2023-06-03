@@ -1,13 +1,13 @@
 <script setup>
 let emit = defineEmits(["onMakerDownMeaage"]);
 defineExpose({
-    start(){
+    start() {
 
     },
-    stop(){
+    stop() {
 
     },
-    sendMessage(){
+    sendMessage() {
 
     }
 });
