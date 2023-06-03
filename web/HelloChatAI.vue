@@ -1,5 +1,5 @@
 <script setup>
-import Select from "./components/select.vue"
+import Select from "./components/Select.vue"
 import Chat from "./components/Chat.vue"
 import StatusBar from "./components/StatusBar.vue";
 import { provide, reactive, ref } from 'vue';
