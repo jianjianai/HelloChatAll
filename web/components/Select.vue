@@ -67,13 +67,19 @@ function deleteChatRecord(theChatRecord) {
 <style scoped>
 .delte {
   position: absolute;
+  top: 50%;
+  transform: translateY(-50%) translateX(1rem);
+  right: 0.5rem;
   width: 1rem;
   height: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 0.5rem;
+  opacity: 0;
   color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},100%)`');
-  transition: color 0.5s;
+  transition: color 0.5s,transform 0.5s,opacity 0.5s;
+}
+
+.select:hover .delte{
+  opacity:1;
+  transform: translateY(-50%);
 }
 
 .delte:hover {
@@ -117,6 +123,7 @@ function deleteChatRecord(theChatRecord) {
   cursor: pointer;
   transition: background-color 0.5s;
   position: relative;
+  overflow: hidden;
 }
 
 .select:has(.delte:hover) {
