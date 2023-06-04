@@ -1,6 +1,6 @@
-import { markRaw, readonly, ref } from "vue";
-import BingChat from "../components/chats/BingChat.vue";
-import BingChatSetUp from "../components/chats/BingChatSetUp.vue";
+import { markRaw, readonly } from "vue";
+import BingChat from "../components/chats/bing/BingChat.vue";
+import BingChatSetUp from "../components/chats/bing/BingChatSetUp.vue";
 
 let aiList = [
   {
@@ -34,20 +34,18 @@ let aiList = [
     setUpVue: markRaw(BingChatSetUp),
   },
 ];
-let userAi = ref(aiList[0]);
 
-//添加use方法
-for (let the of aiList) {
-  the.use = () => {
-    userAi.value = the;
-  };
-}
+// {id,{id,name,chatVue,setUpVue}}
+let aiMap = {};
+aiList.forEach((a)=>{
+  aiMap[a.id] = a;
+})
 
 export default class UserCharAi {
-  static getUseChatAi() {
-    return readonly(userAi);
-  }
   static getChatAiArray() {
     return readonly(aiList);
+  }
+  static getChatAi(id){
+    return readonly(aiMap[id]);
   }
 }

@@ -1,7 +1,7 @@
 <script setup>
-import GlobalSettings from './all/GlobalSettings.vue';
-import Box from "./all/Box.vue"
-import Option from './all/Option.vue';
+import GlobalSettings from '../all/GlobalSettings.vue';
+import Box from "../all/Box.vue"
+import Option from '../all/Option.vue';
 
 </script>
 <template>

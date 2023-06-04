@@ -2,10 +2,9 @@
 import Input from './module/Input.vue';
 import Message from './module/Messages.vue';
 import { ref } from 'vue';
+import uerChatRecordData from "../use/uerChatRecordData";
 
-const props = defineProps({
-  chatAI:Object
-});
+const useChatRecord = uerChatRecordData();
 const messageApi = ref();
 const inputApi = ref();
 
@@ -58,7 +57,7 @@ function onInputMessage(message) {
   <div class="chatbox">
     <div class="message">
       <Message ref=messageApi>
-        <component :is="props.chatAI.chatVue"></component>
+        <!-- <component :is="props.chatAI.chatVue"></component> -->
       </Message>
     </div>
     <div class="imput">

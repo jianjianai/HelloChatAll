@@ -2,14 +2,14 @@
 import Select from "./Select.vue"
 import Chat from "./Chat.vue"
 import StatusBar from "./StatusBar.vue";
-import { provide, reactive, ref } from 'vue';
+import { provide, reactive, ref, watchEffect } from 'vue';
 import GearFill from "../icon/GearFill.vue"
-import UserCharAi from "../class/UserCharAi";
 import ChatDotsFill from "../icon/ChatDotsFill.vue";
+import SetUp from "./SetUp.vue"
+import NewChat from "./NewChat.vue";
+import uerChatRecordData from "../use/uerChatRecordData";
 
-const chatAI = UserCharAi.getUseChatAi();
-const chatAiArray = UserCharAi.getChatAiArray();
-const setupVue = ref(chatAI.setUpVue);
+const useChatRecord = uerChatRecordData();
 const openSetUp = ref(false);
 let themeColor = reactive({
   r: 0,
@@ -41,18 +41,16 @@ provide("themeColor", themeColor);
       <!-- 右边部分 -->
       <div class="right">
 
+        <!-- 设置切换按钮 -->
         <GearFill class="setUp rotate" v-show="!openSetUp" @click="openSetUp = !openSetUp"></GearFill>
-        <ChatDotsFill class="setUp" v-show="openSetUp" @click="openSetUp = !openSetUp">
-        </ChatDotsFill>
+        <ChatDotsFill class="setUp" v-show="openSetUp" @click="openSetUp = !openSetUp"></ChatDotsFill>
 
         <!-- 设置和聊天组件 -->
         <TransitionGroup name="rightTransition">
-          <template v-for="ai of chatAiArray" :key="ai.id+'-setUp'">
-            <component :is="ai.setUpVue" v-show="openSetUp && ai.id === chatAI.id"></component>
-          </template>
-          <template v-for="ai of chatAiArray" :key="ai.id+'-Chat'">
-            <Chat v-show="!openSetUp && ai.id === chatAI.id" :chatAI="ai"></Chat>
-          </template>
+            <SetUp v-if="useChatRecord"  v-show="openSetUp" :key="'NewChat-SetUp'"></SetUp>
+            <NewChat v-if="!useChatRecord" v-show="!openSetUp" :key="'NewChat'" ></NewChat>
+            <SetUp v-if="useChatRecord"  v-show="openSetUp" :chatRecordData="useChatRecord" :key="useChatRecord?useChatRecord.getID():'SetUp'+'-SetUp'"></SetUp>
+            <Chat v-if="useChatRecord" v-show="!openSetUp" :chatRecordData="useChatRecord" :key="useChatRecord.getID()+'-Chat'"></Chat>
         </TransitionGroup>
 
       </div>
@@ -138,11 +136,6 @@ provide("themeColor", themeColor);
 }
 
 .left {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
   border-radius: 0.2rem 0.2rem 0.2rem 0.5rem;
   margin-top: 0.3rem;
   margin-right: 0.3rem;

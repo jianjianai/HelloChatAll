@@ -1,7 +1,7 @@
 <script setup>
-import UserChatAi from "../class/UserCharAi"
+import uerChatRecordData from "../use/uerChatRecordData";
 
-let userChatAi = UserChatAi.getUseChatAi();
+const useChatRecord = uerChatRecordData();
 
 
 </script>
@@ -13,8 +13,8 @@ let userChatAi = UserChatAi.getUseChatAi();
       <h2>HelloChatAI</h2>
     </div>
   </div>
-  <div class="chatAI">
-    {{ userChatAi.name }}
+  <div class="chatAI" v-if="useChatRecord">
+    {{ useChatRecord.getName() }}
   </div>
 </template>
 
