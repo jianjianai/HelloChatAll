@@ -1,21 +1,24 @@
 import { markRaw, readonly } from "vue";
-import BingWorker from "../components/chats/bing/BingWorker";
-import ChatWorker from "../components/chats/all/ChatWorker";
+import BingWorker from "./bing/BingWorker";
+import ChatWorker from "./all/ChatWorker";
 
 class ChatAi{
   id;
   name;
+  describe;
   workerChass;
   /**
    * 
-   * @param {string} id 
-   * @param {string} name 
-   * @param {ChatWorker.class} workerChass 
+   * @param {string} id id
+   * @param {string} name 名称
+   * @param {ChatWorker.class} workerChass 工作对象的class对象
+   * @param {string} describe 简介
    */
-  constructor(id,name,workerChass){
+  constructor(id,name,describe,workerChass){
     this.id = id;
     this.name = name;
     this.workerChass = workerChass;
+    this.describe = describe;
   }
   /**
    * 获取一个ChatWorker对象
@@ -27,7 +30,9 @@ class ChatAi{
 }
 
 let aiList = [
-  new ChatAi('bing','bingAi',BingWorker)
+  new ChatAi('bing','bingAi',"微软NewBing",BingWorker),
+  new ChatAi('bing1','bingAi',"微软NewBing",BingWorker),
+  new ChatAi('bing2','bingAi',"微软NewBing",BingWorker)
 ];
 
 // {id,ChatAi}

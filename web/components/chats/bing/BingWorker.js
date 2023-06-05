@@ -1,4 +1,6 @@
 import ChatWorker from "../all/ChatWorker";
+import BingChat from "./BingChat.vue";
+import BingSetUp from "./BingSetUp.vue"
 
 export default class BingWorker extends ChatWorker{
         /**
@@ -29,12 +31,12 @@ export default class BingWorker extends ChatWorker{
          * 获取聊天显示vue对象
          *  */
         getChatVue(){
-            throw new NoAchieveError("getChatVue未实现");
+            return BingChat;
         }
         /**
          * 获取设置vue对象
          */
         getSetUpVue(){
-            throw new NoAchieveError("getSetUpVue未实现");
+            throw BingSetUp;
         }
 }
