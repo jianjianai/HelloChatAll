@@ -1,29 +1,24 @@
-# ChatAll
+# HelloChatAll
 
-This template should help get you started developing with Vue 3 in Vite.
+一个AI聊天项目，正在写。
 
-## Recommended IDE Setup
+## 架构
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+Java后端，vue前端。
 
-## Customize configuration
+## 构建
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+首先需要准备好 jdk17 和 node.js 环境。之后执行构建命令。
+~~~
+./gradlew shadow
+~~~
 
-## Project Setup
+构建完成后得到jar包
+~~~
+./build/libs/HelloChatAll-1.0-SNAPSHOT-all.jar
+~~~
 
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+之后就可以使用传统的运行命令了
+~~~
+java -jar HelloChatAll-1.0-SNAPSHOT-all.jar 
+~~~
