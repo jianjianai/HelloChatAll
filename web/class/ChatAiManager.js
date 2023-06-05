@@ -1,50 +1,53 @@
 import { markRaw, readonly } from "vue";
-import BingChat from "../components/chats/bing/BingChat.vue";
-import BingChatSetUp from "../components/chats/bing/BingChatSetUp.vue";
+import BingWorker from "../components/chats/bing/BingWorker";
+import ChatWorker from "../components/chats/all/ChatWorker";
+
+class ChatAi{
+  id;
+  name;
+  workerChass;
+  /**
+   * 
+   * @param {string} id 
+   * @param {string} name 
+   * @param {ChatWorker.class} workerChass 
+   */
+  constructor(id,name,workerChass){
+    this.id = id;
+    this.name = name;
+    this.workerChass = workerChass;
+  }
+  /**
+   * 获取一个ChatWorker对象
+   * @returns {ChatWorker}
+   */
+  newWorker(){
+    return markRaw(new this.workerChass());
+  }
+}
 
 let aiList = [
-  {
-    id: "bing",
-    name: "Bing Ai",
-    chatVue: markRaw(BingChat),
-    setUpVue: markRaw(BingChatSetUp),
-  },
-  {
-    id: "bing1",
-    name: "Bing Ai",
-    chatVue: markRaw(BingChat),
-    setUpVue: markRaw(BingChatSetUp),
-  },
-  {
-    id: "bing2",
-    name: "Bing Ai",
-    chatVue: markRaw(BingChat),
-    setUpVue: markRaw(BingChatSetUp),
-  },
-  {
-    id: "bing3",
-    name: "Bing Ai",
-    chatVue: markRaw(BingChat),
-    setUpVue: markRaw(BingChatSetUp),
-  },
-  {
-    id: "bing4",
-    name: "Bing Ai",
-    chatVue: markRaw(BingChat),
-    setUpVue: markRaw(BingChatSetUp),
-  },
+  new ChatAi('bing','bingAi',BingWorker)
 ];
 
-// {id,{id,name,chatVue,setUpVue}}
+// {id,ChatAi}
 let aiMap = {};
 aiList.forEach((a)=>{
   aiMap[a.id] = a;
 })
 
 export default class UserCharAi {
+  /**
+   * @returns {[ChatAi]}
+   */
   static getChatAiArray() {
     return readonly(aiList);
   }
+  /**
+   * 
+   * @param {string} id 
+   * @returns {ChatAi}
+   */
   static getChatAi(id){
     return readonly(aiMap[id]);
   }

@@ -121,6 +121,7 @@ class ChatRecordDataManager {
   }
   /**
    * 创建一个聊天记录对象
+   * @returns {ChatRecordData}
    */
   static createChatRecord(name){
     let theId = chatRecordsNextID.value++;
