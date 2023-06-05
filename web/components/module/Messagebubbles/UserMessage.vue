@@ -10,7 +10,7 @@ let data = props.data;
 <template>
     <div class="align">
         <div class="bubble" v-bind:class="{ preview: data.isPreview }">
-            <div class="messageBox" v-text="data.message"></div>
+            <pre class="messageBox" v-text="data.message"></pre>
         </div>
     </div>
 </template>
@@ -20,6 +20,8 @@ let data = props.data;
 <style scoped>
 .messageBox {
     word-break: break-word;
+    white-space: pre-wrap;
+    margin: 0;
 }
 
 .bubble {
