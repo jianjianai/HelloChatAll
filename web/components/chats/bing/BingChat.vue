@@ -1,11 +1,14 @@
 <script setup>
-let emit = defineEmits(["onMakerDownMeaage"]);
-defineExpose({
+import {ChatWorker} from '../all/ChatWorker';
 
+let props = defineProps({
+  chatWorker:ChatWorker
 });
 
 </script>
 
 <template>
-    欢迎使用bing
+    <div>
+        欢迎使用bing
+    </div>
 </template>

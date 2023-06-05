@@ -8,8 +8,24 @@ import ChatDotsFill from "../icon/ChatDotsFill.vue";
 import SetUp from "./SetUp.vue"
 import NewChat from "./NewChat.vue";
 import uerChatRecordData from "../use/uerChatRecordData";
+import {ChatWorker} from "./chats/all/ChatWorker";
+import ChatAiManager from "./chats/ChatAiManager";
 
 const useChatRecord = uerChatRecordData();
+const useChatWorker = ref(undefined);
+watchEffect(()=>{//当useChatRecord变化时，加载对应的ChatWorker
+  let value = undefined;
+  if(useChatRecord.value){
+    let AIID = useChatRecord.value.getListData().AIID;
+    if(AIID){
+      let chatAi = ChatAiManager.getChatAi(AIID);
+      if(chatAi){
+        value = chatAi.newWorker(useChatRecord.value);
+      }
+    }
+  }
+  useChatWorker.value = value;
+});
 const openSetUp = ref(false);
 let themeColor = reactive({
   r: 0,
@@ -47,10 +63,10 @@ provide("themeColor", themeColor);
 
         <!-- 设置和聊天组件 -->
         <TransitionGroup name="rightTransition">
-            <SetUp v-if="useChatRecord"  v-show="openSetUp" :key="'NewChat-SetUp'"></SetUp>
+            <SetUp v-if="!useChatRecord"  v-show="openSetUp" :key="'NewSetUp'"></SetUp>
             <NewChat v-if="!useChatRecord" v-show="!openSetUp" :key="'NewChat'" ></NewChat>
-            <SetUp v-if="useChatRecord"  v-show="openSetUp" :chatRecordData="useChatRecord" :key="useChatRecord?useChatRecord.getID():'SetUp'+'-SetUp'"></SetUp>
-            <Chat v-if="useChatRecord" v-show="!openSetUp" :chatRecordData="useChatRecord" :key="useChatRecord.getID()+'-Chat'"></Chat>
+            <SetUp v-if="useChatRecord"  v-show="openSetUp" :chatWorker="useChatWorker" :key="useChatRecord?useChatRecord.getID():'SetUp'+'-SetUp'"></SetUp>
+            <Chat v-if="useChatRecord" v-show="!openSetUp"  :chatWorker="useChatWorker" :key="useChatRecord.getID()+'-Chat'"></Chat>
         </TransitionGroup>
 
       </div>
@@ -92,8 +108,10 @@ provide("themeColor", themeColor);
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgba(255, 255, 255, 0.4);
-  height: 90vh;
-  width: 90vw;
+  height: 98vh;
+  width: 98vw;
+  max-width: 75rem;
+  max-height: 55rem;
   border-radius: 1rem;
   display: flex;
   flex-direction: column;

@@ -3,7 +3,14 @@ class NoAchieveError extends Error{
         super(message);
     }
 }
-export default class ChatWorker{
+class ChatWorker{
+    chatRecordData;
+    /**
+     * @param {ChatRecordData} chatRecordData 
+     */
+    constructor(chatRecordData){
+        this.chatRecordData = chatRecordData;
+    }
     /**
      * 开始聊天
      */
@@ -41,3 +48,4 @@ export default class ChatWorker{
         throw new NoAchieveError("getSetUpVue未实现");
     }
 }
+export {NoAchieveError,ChatWorker};

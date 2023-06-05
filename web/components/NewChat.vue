@@ -15,7 +15,9 @@ const chatName = ref("新的聊天");
  * @param ai {ChatAi}
  */
 function select(ai) {
-    useChatRecord.value = ChatRecordDataManager.createChatRecord(chatName.value)
+    let chatRecord = ChatRecordDataManager.createChatRecord(chatName.value);
+    chatRecord.getListData().AIID = ai.id;
+    useChatRecord.value = chatRecord;
 }
 
 </script>

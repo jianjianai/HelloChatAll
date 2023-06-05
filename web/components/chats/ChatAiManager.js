@@ -1,6 +1,6 @@
 import { markRaw, readonly } from "vue";
 import BingWorker from "./bing/BingWorker";
-import ChatWorker from "./all/ChatWorker";
+import {ChatWorker} from "./all/ChatWorker";
 
 class ChatAi{
   id;
@@ -22,10 +22,11 @@ class ChatAi{
   }
   /**
    * 获取一个ChatWorker对象
+   * @param {ChatRecordData} chatRecordData 聊天记录对象
    * @returns {ChatWorker}
    */
-  newWorker(){
-    return markRaw(new this.workerChass());
+  newWorker(chatRecordData){
+    return markRaw(new this.workerChass(chatRecordData));
   }
 }
 
@@ -41,7 +42,7 @@ aiList.forEach((a)=>{
   aiMap[a.id] = a;
 })
 
-export default class UserCharAi {
+export default class ChatAiManager {
   /**
    * @returns {[ChatAi]}
    */
@@ -54,6 +55,12 @@ export default class UserCharAi {
    * @returns {ChatAi}
    */
   static getChatAi(id){
-    return readonly(aiMap[id]);
+    let the = aiMap[id];
+    if(the){
+      return readonly(the);
+    }else{
+      return undefined;
+    }
+    
   }
 }

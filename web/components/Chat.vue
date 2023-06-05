@@ -1,10 +1,15 @@
 <script setup>
 import Input from './module/Input.vue';
 import Message from './module/Messages.vue';
+import {ChatWorker} from './chats/all/ChatWorker';
 import { ref } from 'vue';
-import uerChatRecordData from "../use/uerChatRecordData";
+import Box from './chats/all/Box.vue';
 
-const useChatRecord = uerChatRecordData();
+
+let props = defineProps({
+  chatWorker:ChatWorker
+});
+
 const messageApi = ref();
 const inputApi = ref();
 
@@ -54,16 +59,19 @@ function onInputMessage(message) {
 </script>
 
 <template>
-  <div class="chatbox">
+  <div class="chatbox" v-if="props.chatWorker">
     <div class="message">
       <Message ref=messageApi>
-        <!-- <component :is="props.chatAI.chatVue"></component> -->
+        <component :is="props.chatWorker.getChatVue()" :chatWorker="props.chatWorker"></component>
       </Message>
     </div>
     <div class="imput">
       <Input ref=inputApi @onSendMessage=onSendMessage @onInputMessage=onInputMessage></Input>
     </div>
   </div>
+  <Box v-else>
+    错误，无法加载聊天程序！
+  </Box>
 </template>
 
 
