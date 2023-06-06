@@ -1,10 +1,12 @@
 <script setup>
 import Box from "../all/Box.vue";
 import Option from "../all/Option.vue";
-import {ChatWorker} from '../all/ChatWorker';
+import { ChatWorker } from '../all/ChatWorker';
+
 let props = defineProps({
   chatWorker:ChatWorker
 });
+
 </script>
 <template>
   <h3>设置 - BingAi</h3>

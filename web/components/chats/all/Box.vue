@@ -1,6 +1,6 @@
 <script setup>
 import { inject } from 'vue';
-let themeColor = inject("themeColor");
+import { useThemeColor } from '../../../class/ThemeColorManager';
 let props = defineProps({
     boder:Boolean
 })
@@ -38,7 +38,8 @@ let props = defineProps({
 }
 
 .inbox::-webkit-scrollbar-thumb {
-  background-color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},30%)`');
+  background-color: v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},30%)`');
+  transition: background-color 1s;
   border-radius: 1rem;
 }
 </style>

@@ -1,9 +1,10 @@
 <script setup>
 import { inject, ref, watchEffect } from "vue";
 import ArrowLeftCircleFill from "../icon/ArrowLeftCircleFill.vue"
-import { ChatRecordDataManager } from "../class/chatRecord/ChatRecordDataManager.js"
+import { ChatRecordDataManager } from "../class/ChatRecordDataManager.js"
 import uerChatRecordData from "../use/uerChatRecordData";
 import Trash3 from "../icon/Trash3.vue";
+import { useThemeColor } from "../class/ThemeColorManager";
 
 const emit = defineEmits(["SwitchUseRecordData"])
 
@@ -13,7 +14,6 @@ const useChatRecord = uerChatRecordData();
 
 
 let isExpand = ref(true);//是否缩小
-let themeColor = inject("themeColor");
 
 function deleteChatRecord(theChatRecord) {
   if(useChatRecord.value && useChatRecord.value.getID()===theChatRecord.getID()){
@@ -73,7 +73,7 @@ function deleteChatRecord(theChatRecord) {
   width: 1rem;
   height: 1rem;
   opacity: 0;
-  color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},100%)`');
+  color: v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},100%)`');
   transition: color 0.5s,transform 0.5s,opacity 0.5s;
 }
 
@@ -87,12 +87,12 @@ function deleteChatRecord(theChatRecord) {
 }
 
 .top-icon {
-  color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},100%)`');
+  color: v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},100%)`');
   width: 1.5rem;
   height: 1.5rem;
   margin: 0.5rem;
   transform: rotate(0deg);
-  transition: transform 0.5s;
+  transition: transform 0.5s,color 0.5s;
 }
 
 .top-icon.small {
@@ -132,13 +132,13 @@ function deleteChatRecord(theChatRecord) {
 }
 
 .select:hover {
-  background-color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},5%)`');
-  border: 0.05rem solid v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},50%)`');
+  background-color: v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},5%)`');
+  border: 0.05rem solid v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},50%)`');
 }
 
 .select.selected {
-  background-color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},20%)`');
-  border: 0.05rem solid v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},90%)`');
+  background-color: v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},20%)`');
+  border: 0.05rem solid v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},90%)`');
 }
 
 .name {

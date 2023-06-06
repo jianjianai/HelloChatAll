@@ -1,11 +1,7 @@
 <script setup>
 import { inject, markRaw, reactive, ref } from 'vue';
-import AiMakerDownMessage from './Messagebubbles/AiMakerDownMessage.vue';
-import AiErrorMessage from './Messagebubbles/AiErrorMessage.vue';
-import UserMessage from './Messagebubbles/UserMessage.vue';
 import useAutoScrolling from "../../use/useAutoScrolling"
-
-let themeColor = inject("themeColor");
+import { useThemeColor } from '../../class/ThemeColorManager';
 let messages = reactive({});
 let messageNextId = 0;
 let chatBoxDom = ref();
@@ -14,21 +10,30 @@ function getNextMessageId() {
   return messageNextId++;
 }
 
+class Message {
+  id;
+  type;
+  data;
+  ref = ref(undefined);
+  constructor(id, type, data) {
+    this.id = id;
+    this.type = markRaw(type);
+    this.data = reactive(data);
+  }
+  delete() {//删除当前消息
+    delete messages[this.id];
+  }
+}
+
 /**
- * 
+ * 添加一条消息
  * @param {组件} type 
- * @param {对象} data 
+ * @param {数据对象} data 
+ * @return {Message} 消息对象
  */
-function addNewBaseMessage(type, data) {
+function addNewMessage(type, data) {
   let id = getNextMessageId();
-  let theMessage = reactive({
-    id: id,
-    type: markRaw(type),
-    data: reactive(data),
-    delete() {//删除当前消息
-      delete messages[this.id];
-    }
-  });
+  let theMessage = markRaw(new Message(id, type, data));
   messages[id] = theMessage;
   return theMessage;
 }
@@ -36,31 +41,7 @@ function addNewBaseMessage(type, data) {
 useAutoScrolling(chatBoxDom);
 
 defineExpose({
-  /**
-   * 添加一条AI发送的makerdown消息
-   */
-  addAiMakerDownMessage(message) {
-    return addNewBaseMessage(AiMakerDownMessage, {
-      message
-    })
-  },
-  /**
-   * 添加一条错误消息
-   */
-  addAiErrorMessage(message) {
-    return addNewBaseMessage(AiErrorMessage, {
-      message
-    })
-  },
-  /**
-   * 添加一条用户消息,默认是预览状态
-   */
-  addUserMessage(message) {
-    let theMessage = addNewBaseMessage(UserMessage, {
-      message, isPreview: true
-    })
-    return theMessage;
-  }
+  addNewMessage
 });
 
 
@@ -72,14 +53,30 @@ defineExpose({
       <div class="slot">
         <slot></slot>
       </div>
-      <div class="messagesBox" v-for="message in messages" :key="message.id">
-        <component :is="message.type" :data="message.data"></component>
-      </div>
+      <TransitionGroup name="messageList">
+        <template class="messagesBox" v-for="message in messages" :key="message.id">
+          <component :is="message.type" :data="message.data" :ref="message.ref"></component>
+        </template>
+      </TransitionGroup>
+      <div class="end"></div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.messageList-enter-active,
+.messageList-leave-active {
+  transition: all 0.5s ease;
+}
+.messageList-enter-from,
+.messageList-leave-to {
+  opacity: 0;
+  transform: translateY(3rem);
+}
+.end{
+  height: 3rem;
+}
+
 .box {
   height: 100%;
   display: flex;
@@ -105,7 +102,7 @@ defineExpose({
 }
 
 .chatBox::-webkit-scrollbar-thumb {
-  background-color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},30%)`');
+  background-color: v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},30%)`');
   border-radius: 1rem;
 }
 </style>

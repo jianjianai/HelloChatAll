@@ -1,7 +1,7 @@
 <script setup>
 import { inject, ref, watchEffect } from 'vue';
 import SendSvg from "../../icon/send.vue"
-let themeColor = inject("themeColor");
+import { useThemeColor } from '../../class/ThemeColorManager';
 let emit = defineEmits(["onInputMessage", "onSendMessage"]);
 
 
@@ -52,14 +52,14 @@ defineExpose({
     font-size: 1rem;
     display: flex;
     align-items: center;
-    background-color: v-bind('`rgba(${themeColor.r}, ${themeColor.g}, ${themeColor.b}, 0.4)`');
+    background-color: v-bind('`rgba(${useThemeColor.r}, ${useThemeColor.g}, ${useThemeColor.b}, 0.4)`');
     padding: 0.5rem;
     cursor: pointer;
     transition: background-color 0.5s;
 }
 
 .send:hover {
-    background-color: v-bind('`rgba(${themeColor.r}, ${themeColor.g}, ${themeColor.b}, 0.6)`');
+    background-color: v-bind('`rgba(${useThemeColor.r}, ${useThemeColor.g}, ${useThemeColor.b}, 0.6)`');
 }
 
 .sendSvg {
@@ -93,13 +93,13 @@ defineExpose({
 
 .inputBor:has(.input:focus-visible) {
     background-color: rgba(255, 255, 255, 0.43);
-    border: v-bind('`0.08rem solid rgba(${themeColor.r}, ${themeColor.g}, ${themeColor.b}, 0.8)`');
+    border: v-bind('`0.08rem solid rgba(${useThemeColor.r}, ${useThemeColor.g}, ${useThemeColor.b}, 0.8)`');
     padding: 0.47rem;
 }
 
 .inputBor:hover {
     background-color: rgba(255, 255, 255, 0.43);
-    border: v-bind('`0.05rem solid rgba(${themeColor.r}, ${themeColor.g}, ${themeColor.b}, 0.5)`');
+    border: v-bind('`0.05rem solid rgba(${useThemeColor.r}, ${useThemeColor.g}, ${useThemeColor.b}, 0.5)`');
 }
 
 .box {

@@ -10,6 +10,8 @@ import NewChat from "./NewChat.vue";
 import uerChatRecordData from "../use/uerChatRecordData";
 import {ChatWorker} from "./chats/all/ChatWorker";
 import ChatAiManager from "./chats/ChatAiManager";
+import { useThemeColor } from "../class/ThemeColorManager";
+import Background from "./Background.vue";
 
 const useChatRecord = uerChatRecordData();
 const useChatWorker = ref(undefined);
@@ -27,20 +29,13 @@ watchEffect(()=>{//当useChatRecord变化时，加载对应的ChatWorker
   useChatWorker.value = value;
 });
 const openSetUp = ref(false);
-let themeColor = reactive({
-  r: 0,
-  g: 140,
-  b: 220
-});
-provide("themeColor", themeColor);
 
 
 </script>
 
 <template>
   <!-- 背景 -->
-  <div class="background">
-  </div>
+  <Background></Background>
 
   <!-- 最外层 -->
   <div class="outset">
@@ -149,8 +144,9 @@ provide("themeColor", themeColor);
 
 .left::-webkit-scrollbar-thumb,
 .right::-webkit-scrollbar-thumb {
-  background-color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},20%)`');
+  background-color: v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},20%)`');
   border-radius: 1rem;
+  transition: background-color 1s;
 }
 
 .left {
@@ -178,7 +174,7 @@ provide("themeColor", themeColor);
 }
 
 .setUp {
-  color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},80%)`');
+  color: v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},80%)`');
   position: absolute;
   top: 0;
   right: 0;
@@ -194,7 +190,7 @@ provide("themeColor", themeColor);
 }
 
 .setUp:hover {
-  color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},100%)`');
+  color: v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},100%)`');
 }
 
 @keyframes rotate {
@@ -207,14 +203,4 @@ provide("themeColor", themeColor);
   }
 }
 
-/* 背景 */
-.background {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: -10;
-  height: 100vh;
-  width: 100vw;
-  background: v-bind('`linear-gradient(163deg, rgba(${themeColor.r},${themeColor.g},${themeColor.b},30%) 20%,rgba(${themeColor.r + 100},${themeColor.g - 50},${themeColor.b},30%) 50%,rgba(${themeColor.r},${themeColor.g},${themeColor.b},30%) 80%)`');
-}
 </style>

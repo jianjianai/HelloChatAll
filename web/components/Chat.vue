@@ -4,6 +4,7 @@ import Message from './module/Messages.vue';
 import {ChatWorker} from './chats/all/ChatWorker';
 import { ref } from 'vue';
 import Box from './chats/all/Box.vue';
+import UserMessage from './module/Messagebubbles/UserMessage.vue';
 
 
 let props = defineProps({
@@ -27,7 +28,7 @@ function onSendMessage(message) {
     return;
   }
   if (!sendingMessage) {
-    sendingMessage = messageApi.value.addUserMessage(message);
+    sendingMessage = messageApi.value.addNewMessage(UserMessage,{message});
   }
   sendingMessage.data.message = message;
   sendingMessage.data.isPreview = false;
@@ -44,7 +45,7 @@ function onSendMessage(message) {
 function onInputMessage(message) {
   if (message) {
     if (!sendingMessage) {
-      sendingMessage = messageApi.value.addUserMessage(message);
+      sendingMessage = messageApi.value.addNewMessage(UserMessage,{message,isPreview:true});
     }
     sendingMessage.data.message = message;
   } else {

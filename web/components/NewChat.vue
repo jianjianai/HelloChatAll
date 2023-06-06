@@ -1,11 +1,12 @@
 <script setup>
-import { ChatRecordDataManager } from '../class/chatRecord/ChatRecordDataManager';
+import { ChatRecordDataManager } from '../class/ChatRecordDataManager';
 import Box from './chats/all/Box.vue';
 import uerChatRecordData from "../use/uerChatRecordData";
 import ChatAiManager from "./chats/ChatAiManager"
 import { inject, ref } from 'vue';
+import { ThemeColorManager, useThemeColor } from '../class/ThemeColorManager';
 
-let themeColor = inject("themeColor");
+ThemeColorManager.useDefault();
 const useChatRecord = uerChatRecordData();
 const aiList = ChatAiManager.getChatAiArray();
 const chatName = ref("新的聊天");
@@ -85,7 +86,7 @@ function select(ai) {
 }
 
 .inputName:hover {
-    border:0.05rem solid v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},80%)`');
+    border:0.05rem solid v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},80%)`');
 }
 
 .hr {
@@ -123,7 +124,7 @@ function select(ai) {
 }
 
 .option:hover {
-    background-color: v-bind('`rgba(${themeColor.r},${themeColor.g},${themeColor.b},10%)`');
+    background-color: v-bind('`rgba(${useThemeColor.r},${useThemeColor.g},${useThemeColor.b},10%)`');
 }
 
 .optionImg {
