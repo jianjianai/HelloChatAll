@@ -26,32 +26,49 @@ function select(ai) {
         <h1>
             创建新的聊天
         </h1>
-        <div class="hr"></div>
-        <h2>
-            设置聊天名称
-        </h2>
-        <input class="inputName" type="text" v-model="chatName">
-        <div class="hr"></div>
-        <h2>
-            选择对话AI
-        </h2>
-        <div class="list">
-            <div class="option" v-for="ai of aiList" @click="() => { select(ai) }">
-                <div class="optionImg">
 
-                </div>
-                <div class="optionText">
-                    <h3>{{ ai.name }}</h3>
-                    <p>{{ ai.describe }}</p>
-                </div>
-
+        <div class="op">
+            <div>
+                <h2>
+                    设置聊天名称
+                </h2>
+                <input class="inputName" type="text" v-model="chatName">
             </div>
         </div>
+
+
+        <div class="op">
+            <h2>
+                选择对话AI
+            </h2>
+            <div class="list">
+                <div class="option" v-for="ai of aiList" @click="() => { select(ai) }" :key="ai.id">
+                    <div class="optionImg">
+
+                    </div>
+                    <div class="optionText">
+                        <h3>{{ ai.name }}</h3>
+                        <p>{{ ai.describe }}</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
     </Box>
 </template>
 
 
 <style scoped>
+.op {
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: rgba(255, 255, 255, 30%);
+    border: 0.05rem solid rgba(0, 0, 0, 0.205);
+}
+
 .inputName {
     display: block;
     max-width: 20rem;
