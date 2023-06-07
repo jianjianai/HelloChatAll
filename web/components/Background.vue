@@ -1,5 +1,5 @@
-<script setup>
-import { useThemeColor } from '../class/ThemeColorManager';
+<script lang="ts" setup>
+import { useThemeColor } from './ThemeColor';
 
 
 </script>
@@ -8,7 +8,7 @@ import { useThemeColor } from '../class/ThemeColorManager';
   <div class="background">
     <template v-if="useThemeColor.ball">
       <TransitionGroup name="list">
-        <div class="ball" v-for="(b, index) in useThemeColor.ball" :key="b" v-bind:style="{
+        <div class="ball" v-for="(b, index) in useThemeColor.ball" :key="index" v-bind:style="{
           top: b.y,
           left: b.x,
           width: b.l,

@@ -1,11 +1,10 @@
-import { onMounted, onUnmounted } from "vue";
+import {onMounted, onUnmounted, type Ref } from "vue";
 
 /**
  * 当当前在底部时，如果元素更新自动滚动到底部
- * @param {{value:HTMLElement}} elementRef
  */
-export default function useAutoScrolling(elementRef) {
-  let observer;
+function useAutoScrolling(elementRef:Ref<Element>) {
+  let observer:MutationObserver;
   onMounted(() => {
     let element = elementRef.value;
     // 当聊天更新时，如果窗口在底部则将窗口滚动到底部
@@ -38,3 +37,5 @@ export default function useAutoScrolling(elementRef) {
     }
   });
 }
+
+export {useAutoScrolling}

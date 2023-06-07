@@ -1,24 +1,23 @@
-<script setup>
-import { ChatRecordDataManager } from '../class/ChatRecordDataManager';
-import Box from './chats/all/Box.vue';
-import uerChatRecordData from "../use/uerChatRecordData";
-import ChatAiManager from "./chats/ChatAiManager"
-import { inject, ref } from 'vue';
-import { ThemeColorManager, useThemeColor } from '../class/ThemeColorManager';
+<script lang="ts" setup>
+import { ChatRecordDataManager } from "./ChatRecordData"
+import Box from "./chat/Box.vue";
+import {useChatRecordData} from "./uerChatRecordData";
+import { ChatWorkerManager } from "./chat/ai/ChatWorkerManager";
+import { ref } from 'vue';
+import { ThemeColorManager, useThemeColor } from "./ThemeColor"
 
 ThemeColorManager.useDefault();
-const useChatRecord = uerChatRecordData();
-const aiList = ChatAiManager.getChatAiArray();
+const aiList = ChatWorkerManager.getAllWorker()
 const chatName = ref("新的聊天");
 
 /**
  * 当选择ai时
  * @param ai {ChatAi}
  */
-function select(ai) {
+function select(key:string,ai:WorkerOptions) {
     let chatRecord = ChatRecordDataManager.createChatRecord(chatName.value);
-    chatRecord.getListData().AIID = ai.id;
-    useChatRecord.value = chatRecord;
+    chatRecord.getListData().aiID = key;
+    useChatRecordData.value = chatRecord;
 }
 
 </script>
@@ -43,7 +42,7 @@ function select(ai) {
                 选择对话AI
             </h2>
             <div class="list">
-                <div class="option" v-for="ai of aiList" @click="() => { select(ai) }" :key="ai.id">
+                <div class="option" v-for="(ai,key) in aiList" @click="() => { select(key.toString(),ai) }" :key="key">
                     <div class="optionImg">
 
                     </div>

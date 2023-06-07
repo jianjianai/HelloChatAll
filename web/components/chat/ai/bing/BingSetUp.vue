@@ -1,11 +1,11 @@
-<script setup>
-import Box from "../all/Box.vue";
-import Option from "../all/Option.vue";
-import { ChatWorker } from '../all/ChatWorker';
+<script lang="ts" setup>
+import Box from "../../Box.vue";
+import Option from "../../Option.vue";
+import type { BingChatWorker } from "./BingChatWorker";
 
-let props = defineProps({
-  chatWorker:ChatWorker
-});
+let props = defineProps<{
+    chatWorker:BingChatWorker
+}>();
 
 </script>
 <template>

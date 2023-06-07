@@ -1,23 +1,22 @@
-<script setup>
+<script lang="ts" setup>
 import { inject, ref, watchEffect } from "vue";
-import ArrowLeftCircleFill from "../icon/ArrowLeftCircleFill.vue"
-import { ChatRecordDataManager } from "../class/ChatRecordDataManager.js"
-import uerChatRecordData from "../use/uerChatRecordData";
-import Trash3 from "../icon/Trash3.vue";
-import { useThemeColor } from "../class/ThemeColorManager";
+import ArrowLeftCircleFill from "@/assets/icon/ArrowLeftCircleFill.vue";
+import { ChatRecordData, ChatRecordDataManager } from "./ChatRecordData"
+import {useChatRecordData} from "./uerChatRecordData"
+import Trash3 from "@/assets/icon/Trash3.vue";
+import { useThemeColor } from "./ThemeColor"
 
 const emit = defineEmits(["SwitchUseRecordData"])
 
 const allChatRecord = ChatRecordDataManager.getAllChatRecord();
-const useChatRecord = uerChatRecordData();
 
 
 
 let isExpand = ref(true);//是否缩小
 
-function deleteChatRecord(theChatRecord) {
-  if(useChatRecord.value && useChatRecord.value.getID()===theChatRecord.getID()){
-    useChatRecord.value = undefined;
+function deleteChatRecord(theChatRecord:ChatRecordData) {
+  if(useChatRecordData.value && useChatRecordData.value.getID()===theChatRecord.getID()){
+    useChatRecordData.value = undefined;
   }
   theChatRecord.delete();
 }
@@ -36,7 +35,7 @@ function deleteChatRecord(theChatRecord) {
     <ArrowLeftCircleFill class="top-icon" :class="{ small: !isExpand }"></ArrowLeftCircleFill>
   </div>
   <!-- 新建 -->
-  <div class="select" v-bind:class="{ selected: useChatRecord === undefined }" v-on:click="useChatRecord = undefined">
+  <div class="select" v-bind:class="{ selected: useChatRecordData === undefined }" v-on:click="useChatRecordData = undefined">
     <div class="img">
     </div>
     <Transition name="show">
@@ -49,8 +48,8 @@ function deleteChatRecord(theChatRecord) {
   <!-- 列表 -->
   <TransitionGroup name="list">
     <template v-for="re of allChatRecord" :key=re.getID()>
-      <div class="select" v-bind:class="{ selected: useChatRecord ? useChatRecord.getID() === re.getID() : false }"
-        @click="() => { useChatRecord = re }">
+      <div class="select" v-bind:class="{ selected: useChatRecordData ? useChatRecordData.getID() === re.getID() : false }"
+        @click="() => { useChatRecordData = re }">
         <div class="img">
         </div>
         <Transition name="show">

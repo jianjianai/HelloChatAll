@@ -1,12 +1,14 @@
-<script setup>
-import "../../../assets/github-markdown-css.css"
+<script lang="ts" setup>
+import "@/assets/github-markdown-css.css"
 import { ref, watchEffect } from 'vue';
 import { marked } from 'marked';
 
 
-let props = defineProps({
-    data: Object
-});
+let props = defineProps<{
+    data:{
+        message:string
+    }
+}>();
 let data = props.data;
 let makerdom = ref("");
 

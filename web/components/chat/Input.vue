@@ -1,9 +1,13 @@
-<script setup>
+<script lang="ts" setup>
 import { inject, ref, watchEffect } from 'vue';
-import SendSvg from "../../icon/send.vue"
-import { useThemeColor } from '../../class/ThemeColorManager';
+import Send from '../../assets/icon/SendIcon.vue';
+import { useThemeColor } from '../ThemeColor';
+import type { ChatRecordData } from '../ChatRecordData';
 let emit = defineEmits(["onInputMessage", "onSendMessage"]);
 
+let props = defineProps<{
+  chatRecordData: ChatRecordData
+}>();
 
 let inputText = ref("");
 
@@ -19,7 +23,7 @@ function onSend() {
 //暴露接口
 
 defineExpose({
-    setInputText(text) {
+    setInputText(text:string) {
         inputText.value = text;
     }
 });
@@ -33,7 +37,7 @@ defineExpose({
                 <textarea v-model=inputText class="input" placeholder="愉快地聊天吧！"></textarea>
                 <div class="sendBox">
                     <div class="send" @click="onSend">
-                        <SendSvg class="sendSvg" />发送
+                        <Send class="sendSvg" />发送
                     </div>
                 </div>
             </div>

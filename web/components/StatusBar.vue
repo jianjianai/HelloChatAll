@@ -1,7 +1,5 @@
-<script setup>
-import uerChatRecordData from "../use/uerChatRecordData";
-
-const useChatRecord = uerChatRecordData();
+<script lang="ts" setup>
+import {useChatRecordData} from "./uerChatRecordData"
 
 
 </script>
@@ -13,8 +11,8 @@ const useChatRecord = uerChatRecordData();
       <h2>HelloChatAI</h2>
     </div>
   </div>
-  <div class="chatAI" v-if="useChatRecord">
-    {{ useChatRecord.getName() }}
+  <div class="chatAI" v-if="useChatRecordData">
+    {{ useChatRecordData.getName() }}
   </div>
 </template>
 

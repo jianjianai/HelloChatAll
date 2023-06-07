@@ -1,34 +1,46 @@
-<script setup>
+<script lang="ts" setup>
 import Select from "./Select.vue"
-import Chat from "./Chat.vue"
+import Chat from "./chat/Chat.vue"
 import StatusBar from "./StatusBar.vue";
-import { provide, reactive, ref, watchEffect } from 'vue';
-import GearFill from "../icon/GearFill.vue"
-import ChatDotsFill from "../icon/ChatDotsFill.vue";
+import {ref, watchEffect } from 'vue';
+import GearFill from "@/assets/icon/GearFill.vue";
+import ChatDotsFill from "@/assets/icon/ChatDotsFill.vue";
 import SetUp from "./SetUp.vue"
 import NewChat from "./NewChat.vue";
-import uerChatRecordData from "../use/uerChatRecordData";
-import {ChatWorker} from "./chats/all/ChatWorker";
-import ChatAiManager from "./chats/ChatAiManager";
-import { useThemeColor } from "../class/ThemeColorManager";
+import { useChatRecordData } from "./uerChatRecordData";
+import { useThemeColor } from "./ThemeColor"
 import Background from "./Background.vue";
+import type { ChatWorker } from "./chat/ai/ChatWorker";
+import type { ChatRecordData } from "./ChatRecordData";
+import { ChatWorkerManager } from "./chat/ai/ChatWorkerManager";
 
-const useChatRecord = uerChatRecordData();
-const useChatWorker = ref(undefined);
-watchEffect(()=>{//当useChatRecord变化时，加载对应的ChatWorker
-  let value = undefined;
-  if(useChatRecord.value){
-    let AIID = useChatRecord.value.getListData().AIID;
-    if(AIID){
-      let chatAi = ChatAiManager.getChatAi(AIID);
-      if(chatAi){
-        value = chatAi.newWorker(useChatRecord.value);
-      }
-    }
-  }
-  useChatWorker.value = value;
-});
 const openSetUp = ref(false);
+
+let useChatWorker:ChatWorker|undefined = undefined;//传给子组件时需要不响应式
+let theChatRecordData:ChatRecordData|undefined = undefined;//传给子组件时需要不响应式
+
+function reLoad(chatRecordData?:ChatRecordData){ //当使用中的聊天记录变化时，创建聊天工作对象
+  if(!chatRecordData){
+    useChatWorker = undefined;
+    return;
+  }
+  let listData = chatRecordData.getListData();
+  if(!listData.aiID){
+    useChatWorker = undefined;
+    return;
+  }
+  let worker = ChatWorkerManager.getWorker(listData.aiID);
+  if(!worker){
+    useChatWorker = undefined;
+    return;
+  }
+  useChatWorker = new worker.worker();
+  theChatRecordData = useChatRecordData.value;
+}
+watchEffect(()=>{
+  reLoad(useChatRecordData.value)
+});
+
 
 
 </script>
@@ -58,10 +70,10 @@ const openSetUp = ref(false);
 
         <!-- 设置和聊天组件 -->
         <TransitionGroup name="rightTransition">
-            <SetUp v-if="!useChatRecord"  v-show="openSetUp" :key="'NewSetUp'"></SetUp>
-            <NewChat v-if="!useChatRecord" v-show="!openSetUp" :key="'NewChat'" ></NewChat>
-            <SetUp v-if="useChatRecord"  v-show="openSetUp" :chatWorker="useChatWorker" :key="useChatRecord?useChatRecord.getID():'SetUp'+'-SetUp'"></SetUp>
-            <Chat v-if="useChatRecord" v-show="!openSetUp"  :chatWorker="useChatWorker" :key="useChatRecord.getID()+'-Chat'"></Chat>
+            <SetUp v-if="!useChatRecordData"  v-show="openSetUp" :key="'NewSetUp'"></SetUp>
+            <NewChat v-if="!useChatRecordData" v-show="!openSetUp" :key="'NewChat'" ></NewChat>
+            <SetUp v-if="useChatRecordData"  v-show="openSetUp" :chatWorker="useChatWorker" :key="useChatRecordData?useChatRecordData.getID():'SetUp'+'-SetUp'"></SetUp>
+            <Chat v-if="useChatRecordData" v-show="!openSetUp"  :chatWorker="useChatWorker"  :chatRecordData="theChatRecordData as ChatRecordData" :key="useChatRecordData.getID()+'-Chat'"></Chat>
         </TransitionGroup>
 
       </div>
@@ -154,6 +166,7 @@ const openSetUp = ref(false);
   margin-top: 0.3rem;
   margin-right: 0.3rem;
   overflow-y: auto;
+  position: relative;
 }
 
 .right {
@@ -183,6 +196,7 @@ const openSetUp = ref(false);
   margin: 0.5rem;
   cursor: pointer;
   transition: color 0.5s;
+  z-index: 20;
 }
 
 .rotate {

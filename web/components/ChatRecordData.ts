@@ -1,8 +1,8 @@
-import { markRaw, reactive, ref, watchEffect } from "vue";
+import { markRaw, reactive, ref, watchEffect, type Ref, type Raw } from "vue";
 
 //聊天记录列表 {id:{id,name}}
-let chatRecords = reactive({});
-let chatRecordsNextID = ref(0);
+let chatRecords:{[id:string]:{id:string,name:string}} = reactive({});
+let chatRecordsNextID:Ref<number> = ref(0);
 //加载聊天记录列表
 (()=>{
     let list = localStorage.ChatRecordList;
@@ -37,10 +37,14 @@ watchEffect(() => {
 
 //一个聊天记录对象
 class ChatRecordData {
-  listObj;
-  data; //聊天记录数据对象
-  runTime = reactive({});
-  constructor(listObj) {
+  listObj:{
+    id:string,
+    name:string,
+    aiID?:string
+  };
+  data:{[name:string]:unknown}|undefined; //聊天记录数据对象
+  runTime:{[name:string]:unknown} = reactive({});
+  constructor(listObj:{id:string,name:string}) {
     this.listObj = reactive(listObj);
   }
   getID(){
@@ -57,19 +61,18 @@ class ChatRecordData {
   getName() {
     return this.listObj.name;
   }
-  setName(name) {
+  setName(name:string){
     this.listObj.name = name;
   }
   /**
    * 获取数据对象，是 reactie 修改自动保存
-   * @returns obj
    */
-  getData() {
+  getData():{[name:string]:Object} {
     if (!this.data) {
       //加载聊天记录
       this.data = reactive({});
       let stringdata = localStorage["ChatRecord--" + this.listObj.id];
-      if (data) {
+      if (stringdata) {
         let obj = JSON.parse(stringdata);
         if (obj) {
           this.data = reactive(obj);
@@ -79,7 +82,7 @@ class ChatRecordData {
         localStorage["ChatRecord--" + this.listObj.id] = JSON.stringify(this.data);
       });
     }
-    return this.data;
+    return this.data as {[name:string]:Object};
   }
   /**
    * 不要在这个对象里存大量数据,getData是懒加载，当用到的时候才加载，getListData是一直加载，不管有没有使用。
@@ -91,12 +94,12 @@ class ChatRecordData {
    * 获取runtime
    */
   getRunTime(){
-    return runTime;
+    return this.runTime;
   }
 }
 
-//维护聊天记录对象 {id,ChatRecord}
-let charRecordObjMap = reactive({});
+//维护聊天记录对象
+let charRecordObjMap:{[id:string]:Raw<ChatRecordData>} = reactive({});
 for (const i in chatRecords) {
   let listObj = chatRecords[i];
   if(charRecordObjMap[listObj.id]){
@@ -114,18 +117,16 @@ for (const i in chatRecords) {
 class ChatRecordDataManager {
   /**
    * 获取全部聊天记录对象 是reactive的
-   * @return {[ChatRecordData]}
    */
   static getAllChatRecord() {
     return charRecordObjMap;
   }
   /**
    * 创建一个聊天记录对象
-   * @returns {ChatRecordData}
    */
-  static createChatRecord(name){
+  static createChatRecord(name:string){
     let theId = chatRecordsNextID.value++;
-    let obj = {id:theId,name:name};
+    let obj = {id:theId.toString(),name:name};
     chatRecords[theId] = obj;
     let chat = markRaw(new ChatRecordData(obj))
     charRecordObjMap[theId] = chat;

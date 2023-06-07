@@ -1,12 +1,12 @@
-<script setup>
-import { ref, watchEffect } from 'vue';
-import {ChatWorker} from './chats/all/ChatWorker';
-import Box from './chats/all/Box.vue';
+<script lang="ts" setup>
+import { type ChatWorker } from './chat/ai/ChatWorker';
+import Box from './chat/Box.vue';
 
-let props = defineProps({
-  chatWorker:ChatWorker
-});
+let props = defineProps<{
+  chatWorker?:ChatWorker
+}>();
 
+console.log(props.chatWorker)
 
 </script>
 

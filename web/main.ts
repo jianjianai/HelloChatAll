@@ -1,6 +1,5 @@
-import "./assets/main.css";
-import { createApp } from "vue";
-import HelloChatAI from "./components/HelloChatAI.vue";
+import { createApp } from 'vue'
+import HelloChatAI from './components/HelloChatAI.vue';
 
 // 配置marked
 import { marked } from "marked";
@@ -20,11 +19,10 @@ marked.use(
 marked.use(gfmHeadingId({ prefix: "my-prefix-" }));
 marked.use(mangle());
 
-//加载组件
-createApp(HelloChatAI).mount("#HelloChatAI");
+createApp(HelloChatAI).mount('#HelloChatAI')
 
 //加载动画
-let load = document.getElementById("load");
+let load = document.getElementById("load") as HTMLElement;
 load.classList.add("loaded");
 setTimeout(() => {
   load.remove();

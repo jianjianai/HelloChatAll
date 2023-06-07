@@ -1,6 +1,6 @@
-<script setup>
+<script lang="ts" setup>
 import { inject } from 'vue';
-import { useThemeColor } from '../../../class/ThemeColorManager';
+import { useThemeColor } from '../ThemeColor';
 let props = defineProps({
     boder:Boolean
 })

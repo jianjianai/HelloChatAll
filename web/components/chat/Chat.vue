@@ -1,34 +1,47 @@
-<script setup>
-import Input from './module/Input.vue';
-import Message from './module/Messages.vue';
-import {ChatWorker} from './chats/all/ChatWorker';
-import { ref } from 'vue';
-import Box from './chats/all/Box.vue';
-import UserMessage from './module/Messagebubbles/UserMessage.vue';
+<script lang="ts" setup>
+import Input from './Input.vue';
+import Messages from './Messages.vue';
+import { type ChatWorker } from './ai/ChatWorker';
+import { nextTick, ref, type Ref } from 'vue';
+import Box from './Box.vue';
+import type { ChatRecordData } from '../ChatRecordData';
 
 
-let props = defineProps({
-  chatWorker:ChatWorker
-});
+let props = defineProps<{
+  chatWorker?: ChatWorker,
+  chatRecordData:ChatRecordData
+}>();
 
 const messageApi = ref();
 const inputApi = ref();
 
 
 //聊天
+let sendingMessage:any = undefined;
 
-let sendingMessage = undefined;
+//加载上一次的正在输入
+nextTick(()=>{
+  let message = messageApi.value.messages[messageApi.value.messageNextId-1];
+  if(message){
+    let data = message.data;
+    if(data && data.isPreview){
+      sendingMessage =message;
+      if(data.message){
+        inputApi.value.setInputText(data.message);
+      }
+    }
+  }
+})
 
 /**
  * 回调函数，当用于发送消息时
- * @param {String} message
  */
-function onSendMessage(message) {
+function onSendMessage(message:string) {
   if (!message) {
     return;
   }
   if (!sendingMessage) {
-    sendingMessage = messageApi.value.addNewMessage(UserMessage,{message});
+    sendingMessage = messageApi.value.addNewMessage("AllUserMessage", { message });
   }
   sendingMessage.data.message = message;
   sendingMessage.data.isPreview = false;
@@ -42,10 +55,10 @@ function onSendMessage(message) {
  * 回调函数，当用户输入消息时，只要用户输入框变化就会触发
  * @param {String} message
  */
-function onInputMessage(message) {
+function onInputMessage(message:string) {
   if (message) {
     if (!sendingMessage) {
-      sendingMessage = messageApi.value.addNewMessage(UserMessage,{message,isPreview:true});
+      sendingMessage = messageApi.value.addNewMessage("AllUserMessage", { message, isPreview: true });
     }
     sendingMessage.data.message = message;
   } else {
@@ -62,12 +75,12 @@ function onInputMessage(message) {
 <template>
   <div class="chatbox" v-if="props.chatWorker">
     <div class="message">
-      <Message ref=messageApi>
+      <Messages ref=messageApi :chatRecordData="props.chatRecordData">
         <component :is="props.chatWorker.getChatVue()" :chatWorker="props.chatWorker"></component>
-      </Message>
+      </Messages>
     </div>
     <div class="imput">
-      <Input ref=inputApi @onSendMessage=onSendMessage @onInputMessage=onInputMessage></Input>
+      <Input ref=inputApi :chatRecordData="props.chatRecordData" @onSendMessage=onSendMessage @onInputMessage=onInputMessage></Input>
     </div>
   </div>
   <Box v-else>
