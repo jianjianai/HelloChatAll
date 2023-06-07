@@ -1,4 +1,4 @@
-<script type="ts" setup>
+<script lang="ts" setup>
 import Box from './Box.vue';
 import Option from './Option.vue';
 
