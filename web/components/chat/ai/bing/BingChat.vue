@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { inject, ref, watchEffect } from 'vue';
-import Box from '../../Box.vue';
 import { useThemeColor,ThemeColorManager } from '@/components/ThemeColor';
 import type { BingChatWorker } from './BingChatWorker';
 
@@ -37,8 +36,7 @@ watchEffect(() => {
         hello BingAi
     </h2>
     <div class="theBox">
-        <Box>
-            <h3>调整偏好设置</h3>
+        <h3>调整偏好设置</h3>
             <div class="listBox">
 
                 <div class="option ca" v-bind:class="{ selected: useChatType === 'Creative' }"
@@ -59,7 +57,6 @@ watchEffect(() => {
                     <p>使对话更精确</p>
                 </div>
             </div>
-        </Box>
     </div>
 </template>
 <style scoped>

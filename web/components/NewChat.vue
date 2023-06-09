@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ChatRecordDataManager } from "./ChatRecordData"
-import Box from "./chat/Box.vue";
+import RightBox from "./chat/RightBox.vue";
 import {useChatRecordData} from "./uerChatRecordData";
 import { ChatWorkerManager } from "./chat/ai/ChatWorkerManager";
 import { ref } from 'vue';
@@ -22,7 +22,7 @@ function select(key:string,ai:WorkerOptions) {
 
 </script>
 <template>
-    <Box>
+    <RightBox>
         <h1>
             创建新的聊天
         </h1>
@@ -56,7 +56,7 @@ function select(key:string,ai:WorkerOptions) {
         </div>
 
 
-    </Box>
+    </RightBox>
 </template>
 
 

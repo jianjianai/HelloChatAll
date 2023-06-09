@@ -1,13 +1,11 @@
 <script lang="ts" setup>
 import { inject } from 'vue';
 import { useThemeColor } from '../ThemeColor';
-let props = defineProps({
-    boder:Boolean
-})
+
 </script>
 <template>
     <div class="box">
-        <div class="inbox" v-bind:class="{boder:props.boder}">
+        <div class="inbox">
             <slot></slot>
         </div>
     </div>
@@ -28,9 +26,6 @@ let props = defineProps({
     background-color: rgba(255, 255, 255, 30%);
     flex: 1;
     overflow-y: auto;
-}
-.boder{
-    border: 0.05rem solid rgba(0, 0, 0, 30%);
 }
 .inbox::-webkit-scrollbar {
   width: 0.5rem;

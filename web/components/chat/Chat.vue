@@ -3,7 +3,7 @@ import Input from './Input.vue';
 import Messages from './Messages.vue';
 import { type ChatWorker } from './ai/ChatWorker';
 import { nextTick, ref, type Ref } from 'vue';
-import Box from './Box.vue';
+import RightBox from './RightBox.vue';
 import type { ChatRecordData } from '../ChatRecordData';
 
 
@@ -83,9 +83,9 @@ function onInputMessage(message:string) {
       <Input ref=inputApi :chatRecordData="props.chatRecordData" @onSendMessage=onSendMessage @onInputMessage=onInputMessage></Input>
     </div>
   </div>
-  <Box v-else>
+  <RightBox v-else>
     错误，无法加载聊天程序！
-  </Box>
+  </RightBox>
 </template>
 
 

@@ -24,7 +24,7 @@ interface ChatWorker{
      *  */
     getChatVue():DefineComponent
     /**
-     * 获取设置对象
+     * 获取设置对象,当前会话设置
      */
     getSetUpVue():DefineComponent
 }
