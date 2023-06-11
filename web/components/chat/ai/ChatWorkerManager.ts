@@ -14,7 +14,9 @@ class WorkerOption {
 let aiMap: {
     [id: string]: WorkerOption
 } = readonly({
-    'NewBing': new WorkerOption(BingChatWorker,"BingAi","微软 BingAi")
+    // '文心一言': new WorkerOption(BingChatWorker,"文心一言","百度文心一言"),
+    'NewBing': new WorkerOption(BingChatWorker,"BingAi","微软 BingAi"),
+    // 'ChatGPT': new WorkerOption(BingChatWorker,"ChatGPT","OpenAI ChatGPT"),
 });
 
 class ChatWorkerManager {

@@ -9,6 +9,7 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
 
 public class Main {
     @Conf static int port = 8080;
@@ -20,6 +21,8 @@ public class Main {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(port),-1);
         httpServer.createContext("/",new Web());
         httpServer.createContext("/HttpProxy",new HttpProxy());
+
+        System.out.println("当前字符集编码: "+Charset.defaultCharset().name());
         System.out.println("服务器启动: http://localhost:"+port);
         httpServer.start();
     }

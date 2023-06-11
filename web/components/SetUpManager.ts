@@ -22,8 +22,4 @@ export default class SetUpManager{
         }
         return setUpMap[wathname];
     }
-
-    static getAllSetUpObj(){
-        return this.getSetUpObj("GlobalSettings");
-    }
 }
