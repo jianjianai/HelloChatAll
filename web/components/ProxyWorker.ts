@@ -13,24 +13,24 @@ async function proxyFetch(
         headers?:{[name:string]:string},
         body?:BodyInit
     }
+    ,porxyServer?:string
     ):Promise<Response>{
-
-        let porxyServer = './HttpProxy'
-        if(porxyConfig.porxyServer){
-            porxyServer = porxyConfig.porxyServer
+        let r;
+        if(porxyServer){
+            r = await fetch(porxyServer,{
+                headers:{
+                    ProxyData:encodeURI(JSON.stringify({
+                        url:url,
+                        headers:init.headers
+                    }))
+                },
+                method:init.method,
+                body:init.body
+            });
+            
+        }else{
+            r = await fetch(url,init);
         }
-
-        let r = await fetch(porxyServer,{
-            headers:{
-                ProxyData:encodeURI(JSON.stringify({
-                    url:url,
-                    headers:init.headers
-                }))
-            },
-            method:init.method,
-            body:init.body
-        });
-
         return r;
 }
 

@@ -10,7 +10,10 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
@@ -53,7 +56,7 @@ public class HttpProxy implements HttpHandler {
             HttpURLConnection httpURLConnection = null;
             try{
                 httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
-                
+
                 httpURLConnection.setRequestMethod(exchange.getRequestMethod());
                 headers.forEach(httpURLConnection::addRequestProperty);//拷贝请求头请求头
                 httpURLConnection.setDoOutput(true);
