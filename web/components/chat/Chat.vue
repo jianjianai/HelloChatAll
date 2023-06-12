@@ -8,8 +8,8 @@ import type { ChatRecordData } from '../ChatRecordData';
 
 
 let props = defineProps<{
-  chatWorker?: ChatWorker,
-  chatRecordData:ChatRecordData
+  chatWorker: ChatWorker,
+  chatRecordData: ChatRecordData
 }>();
 
 const messageApi = ref();
@@ -17,17 +17,35 @@ const inputApi = ref();
 
 
 //聊天
-let sendingMessage:any = undefined;
+let sendingMessage: any = undefined;
 
-//加载上一次的正在输入
-nextTick(()=>{
-  let message = messageApi.value.messages[messageApi.value.messageNextId-1];
-  if(message){
+
+nextTick(() => {
+  //初始化chatworker
+  props.chatWorker.init(props.chatRecordData,messageApi.value.addNewMessage);
+  //加载上一次的正在输入
+  let message = messageApi.value.messages[messageApi.value.messageNextId - 1];
+  if (message && message.type==="AllUserMessage") {
     let data = message.data;
-    if(data && data.isPreview){
-      sendingMessage =message;
-      if(data.message){
-        inputApi.value.setInputText(data.message);
+    if (data) {
+      if (data.isPreview) {
+        sendingMessage = message;
+        if (data.message) {
+          inputApi.value.setInputText(data.message);
+        }
+      }
+    }
+  }
+  //将全部正在发送设置为发送失败
+  for(let key in messageApi.value.messages){
+    let the = messageApi.value.messages[key];
+    if (the && the.type==="AllUserMessage") {
+      let data = the.data;
+      if (data) {
+        if (data.isSending) {
+          data.isSending = false;
+          data.isFall = true;
+        }
       }
     }
   }
@@ -36,7 +54,7 @@ nextTick(()=>{
 /**
  * 回调函数，当用于发送消息时
  */
-function onSendMessage(message:string) {
+function onSendMessage(message: string) {
   if (!message) {
     return;
   }
@@ -45,9 +63,19 @@ function onSendMessage(message:string) {
   }
   sendingMessage.data.message = message;
   sendingMessage.data.isPreview = false;
-  sendingMessage = undefined;
+  sendingMessage.data.isSending = true;
 
-  console.log("send", message)
+
+  let fSendingMessage = sendingMessage;
+  //传递消息worker
+  props.chatWorker.sendMessage(message).then(()=>{
+    fSendingMessage.data.isSending = false;
+  }).catch((error)=>{
+    console.warn(error);
+    fSendingMessage.data.isFall = true;
+  });
+
+  sendingMessage = undefined;
   inputApi.value.setInputText('');
 }
 
@@ -55,7 +83,7 @@ function onSendMessage(message:string) {
  * 回调函数，当用户输入消息时，只要用户输入框变化就会触发
  * @param {String} message
  */
-function onInputMessage(message:string) {
+function onInputMessage(message: string) {
   if (message) {
     if (!sendingMessage) {
       sendingMessage = messageApi.value.addNewMessage("AllUserMessage", { message, isPreview: true });
@@ -67,7 +95,6 @@ function onInputMessage(message:string) {
       sendingMessage = undefined;
     }
   }
-  console.log("input", message)
 }
 
 </script>
@@ -80,7 +107,8 @@ function onInputMessage(message:string) {
       </Messages>
     </div>
     <div class="imput">
-      <Input ref=inputApi :chatRecordData="props.chatRecordData" @onSendMessage=onSendMessage @onInputMessage=onInputMessage></Input>
+      <Input ref=inputApi :chatRecordData="props.chatRecordData" @onSendMessage=onSendMessage
+        @onInputMessage=onInputMessage></Input>
     </div>
   </div>
   <RightBox v-else>

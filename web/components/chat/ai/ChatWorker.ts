@@ -4,21 +4,9 @@ import { ChatRecordData } from "../../ChatRecordData"
 interface ChatWorker{
     init(chatRecordData:ChatRecordData,addMessage:(type:string,data:object)=>void):void;
     /**
-     * 开始聊天
-     */
-    start():void;
-    /**
-     * 是否开始聊天了
-     */
-    isStart():boolean;
-    /**
-     * 停止聊天
-     */
-    stop():void;
-    /**
      * 发送消息
      */
-    sendMessage(message:string):void;
+    sendMessage(message:string):Promise<void>;
     /**
      * 获取聊天显示对象
      *  */

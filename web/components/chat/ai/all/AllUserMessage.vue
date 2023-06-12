@@ -3,7 +3,9 @@
 let props = defineProps<{
     data: {
         message: string,
-        isPreview: boolean
+        isPreview: boolean,
+        isSending: boolean,
+        isFall:boolean,
     }
 }>();
 let data = props.data;
@@ -18,7 +20,17 @@ let data = props.data;
                     正在输入..
                 </div>
             </div>
-            <div class="bubble" v-bind:class="{ preview: data.isPreview }" key="message">
+            <div class="witeIngDiv" v-if="data.isSending">
+                <div class="witeIng" key="input">
+                    正在发送..
+                </div>
+            </div>
+            <div class="witeIngDiv fall" v-if="data.isFall">
+                <div class="witeIng" key="input">
+                    发送失败
+                </div>
+            </div>
+            <div class="bubble" v-bind:class="{ preview: data.isPreview, sending: data.isSending }" key="message">
                 <pre class="messageBox" v-text="data.message"></pre>
             </div>
         </TransitionGroup>
@@ -45,7 +57,26 @@ let data = props.data;
     position: absolute;
 }
 
+.witeIngDiv.fall{
+    color: rgb(202, 0, 0);
+}
 
+.bubble.sending {
+    animation-name: sending;
+    animation-duration: 1s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+}
+
+@keyframes sending {
+    0% {
+        opacity: 50%;
+    }
+
+    100% {
+        opacity: 80%;
+    }
+}
 
 .witeIng {
     font-size: 0.6rem;
@@ -55,7 +86,8 @@ let data = props.data;
     top: -1rem;
     right: 0rem;
 }
-.witeIngDiv{
+
+.witeIngDiv {
     height: 0;
     width: 100%;
     position: relative;
@@ -89,4 +121,5 @@ let data = props.data;
     align-items: flex-end;
     justify-content: flex-start;
 }
+
 </style>

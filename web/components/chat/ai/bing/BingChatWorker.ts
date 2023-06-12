@@ -10,17 +10,8 @@ class BingChatWorker implements ChatWorker {
     init(chatRecordData: ChatRecordData, addMessage: (type: string, data: object) => void): void {
         this.addMessage = addMessage;
     }
-    start(): void {
-        throw new Error("Method not implemented.");
-    }
-    isStart(): boolean {
-        throw new Error("Method not implemented.");
-    }
-    stop(): void {
-        throw new Error("Method not implemented.");
-    }
-    sendMessage(message: string): void {
-        throw new Error("Method not implemented.");
+    async sendMessage(message: string) {
+        console.log(message)
     }
     getChatVue(): DefineComponent<any,any,any,any,any,any,any,any,any,any> {
         return BingChat

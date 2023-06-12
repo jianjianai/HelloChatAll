@@ -2,7 +2,7 @@
 import { inject, markRaw, reactive, ref, type Raw, type DefineComponent, toRaw, watchEffect, readonly } from 'vue';
 import { useAutoScrolling } from '../useAutoScrolling';
 import { useThemeColor } from '../ThemeColor';
-import { messageTypes } from './messageTypes';
+import { messageTypes } from './ai/messageTypes';
 import type { ChatRecordData } from '../ChatRecordData';
 
 class Message {

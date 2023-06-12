@@ -73,7 +73,7 @@ watchEffect(()=>{
             <SetUp v-if="!useChatRecordData"  v-show="openSetUp" :key="'NewSetUp'"></SetUp>
             <NewChat v-if="!useChatRecordData" v-show="!openSetUp" :key="'NewChat'" ></NewChat>
             <SetUp v-if="useChatRecordData"  v-show="openSetUp" :chatWorker="useChatWorker" :key="useChatRecordData?useChatRecordData.getID():'SetUp'+'-SetUp'"></SetUp>
-            <Chat v-if="useChatRecordData" v-show="!openSetUp"  :chatWorker="useChatWorker"  :chatRecordData="theChatRecordData as ChatRecordData" :key="useChatRecordData.getID()+'-Chat'"></Chat>
+            <Chat v-if="useChatRecordData" v-show="!openSetUp"  :chatWorker="useChatWorker as ChatWorker"  :chatRecordData="theChatRecordData as ChatRecordData" :key="useChatRecordData.getID()+'-Chat'"></Chat>
         </TransitionGroup>
 
       </div>
