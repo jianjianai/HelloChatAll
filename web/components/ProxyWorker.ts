@@ -15,7 +15,7 @@ async function proxyFetch(
     }
     ):Promise<Response>{
 
-        let porxyServer = './Proxy'
+        let porxyServer = './HttpProxy'
         if(porxyConfig.porxyServer){
             porxyServer = porxyConfig.porxyServer
         }

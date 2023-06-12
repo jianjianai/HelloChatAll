@@ -14,25 +14,21 @@ import java.net.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class HttpProxy implements HttpHandler {
     static String defaultCharsetName = Charset.defaultCharset().name().toLowerCase();
     static class Proxy {
         String url;
-        String method;
         Map<String,String> headers;
 
         public Proxy(String url, String method, LinkedHashMap<String, String> headers) {
             this.url = url;
-            this.method = method;
             this.headers = headers;
         }
 
         public Proxy(JSONObject jsonObject) {
             url = jsonObject.getString("url");
-            method = jsonObject.getString("method");
             JSONObject headersO = jsonObject.getJSONObject("headers");
             if(headersO!=null){
                 headers = headersO.to(Map.class);
@@ -46,7 +42,6 @@ public class HttpProxy implements HttpHandler {
         public String toString() {
             return "Proxy{" +
                     "url='" + url + '\'' +
-                    ", method='" + method + '\'' +
                     ", headers=" + headers +
                     '}';
         }
@@ -58,9 +53,8 @@ public class HttpProxy implements HttpHandler {
             HttpURLConnection httpURLConnection = null;
             try{
                 httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
-                if(method!=null){
-                    httpURLConnection.setRequestMethod(method);
-                }
+                
+                httpURLConnection.setRequestMethod(exchange.getRequestMethod());
                 headers.forEach(httpURLConnection::addRequestProperty);//拷贝请求头请求头
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.connect();
