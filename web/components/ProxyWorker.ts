@@ -24,10 +24,10 @@ async function proxyFetch(
             headers:{
                 ProxyData:encodeURI(JSON.stringify({
                     url:url,
-                    method:init.method,
                     headers:init.headers
                 }))
             },
+            method:init.method,
             body:init.body
         });
 
