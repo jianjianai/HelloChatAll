@@ -25,7 +25,7 @@ public class HttpProxy implements HttpHandler {
         String url;
         Map<String,String> headers;
 
-        public Proxy(String url, String method, LinkedHashMap<String, String> headers) {
+        public Proxy(String url, LinkedHashMap<String, String> headers) {
             this.url = url;
             this.headers = headers;
         }
