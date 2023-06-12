@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpProxy implements HttpHandler {
-    static String defaultCharsetName = Charset.defaultCharset().name();
+    static String defaultCharsetName = Charset.defaultCharset().name().toLowerCase();
     static class Proxy {
         String url;
         String method;
@@ -130,7 +130,7 @@ public class HttpProxy implements HttpHandler {
      * */
     void returnError(String message,String type,HttpExchange exchange){
         try (exchange) {
-            exchange.getResponseHeaders().set("Content-Type", "text/html; charset=" + defaultCharsetName.toLowerCase());
+            exchange.getResponseHeaders().set("Content-Type", "text/html; charset=" + defaultCharsetName);
             exchange.getResponseHeaders().set("ProxyErrorType", type == null ? "null" : type);
             exchange.sendResponseHeaders(400, 0);
             exchange.getResponseBody().write(message.getBytes());
@@ -142,7 +142,7 @@ public class HttpProxy implements HttpHandler {
     }
     void returnError(Throwable message,String type,HttpExchange exchange){
         try (exchange) {
-            exchange.getResponseHeaders().set("Content-Type","text/html; charset="+defaultCharsetName.toLowerCase());
+            exchange.getResponseHeaders().set("Content-Type","text/html; charset="+defaultCharsetName);
             exchange.getResponseHeaders().set("ProxyErrorType",type==null?"null":type);
             exchange.sendResponseHeaders(400,0);
             PrintStream printStream = new PrintStream(exchange.getResponseBody());
