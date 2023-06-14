@@ -65,14 +65,13 @@ watchEffect(()=>{
       <div class="right">
 
         <!-- 设置切换按钮 -->
-        <GearFill class="setUp rotate" v-show="!openSetUp" @click="openSetUp = !openSetUp"></GearFill>
+        <GearFill class="setUp rotate" v-show="!openSetUp && !useChatRecordData" @click="openSetUp = !openSetUp"></GearFill>
         <ChatDotsFill class="setUp" v-show="openSetUp" @click="openSetUp = !openSetUp"></ChatDotsFill>
 
         <!-- 设置和聊天组件 -->
         <TransitionGroup name="rightTransition">
-            <SetUp v-if="!useChatRecordData"  v-show="openSetUp" :key="'NewSetUp'"></SetUp>
+            <SetUp v-if="openSetUp" :key="'NewSetUp'"></SetUp>
             <NewChat v-if="!useChatRecordData" v-show="!openSetUp" :key="'NewChat'" ></NewChat>
-            <SetUp v-if="useChatRecordData"  v-show="openSetUp" :chatWorker="useChatWorker" :key="useChatRecordData?useChatRecordData.getID():'SetUp'+'-SetUp'"></SetUp>
             <Chat v-if="useChatRecordData" v-show="!openSetUp"  :chatWorker="useChatWorker as ChatWorker"  :chatRecordData="theChatRecordData as ChatRecordData" :key="useChatRecordData.getID()+'-Chat'"></Chat>
         </TransitionGroup>
 
