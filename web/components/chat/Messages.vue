@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { inject, markRaw, reactive, ref, type Raw, type DefineComponent, toRaw, watchEffect, readonly } from 'vue';
+import { markRaw, reactive, ref, type Raw, type DefineComponent, toRaw, watchEffect, readonly } from 'vue';
 import { useAutoScrolling } from '../useAutoScrolling';
 import { useThemeColor } from '../ThemeColor';
-import { messageTypes } from './ai/messageTypes';
 import type { ChatRecordData } from '../ChatRecordData';
+import type { ChatWorker } from './ai/ChatWorker';
+import { allTypeList } from './ai/all/AllTypeList';
 
 class Message {
   id: string;
@@ -24,14 +25,22 @@ class Message {
 }
 
 let props = defineProps<{
-  chatRecordData: ChatRecordData
+  chatRecordData: ChatRecordData,
+  chatWorker:ChatWorker
 }>();
 
+let messageTypes = props.chatWorker.getTypeList();
 let messages: { [id: string]: Message } = reactive({});
 let messageNextId = ref(1);
 let chatBoxDom = ref();
 
-
+function getMessageType(type:string){
+  let the = messageTypes[type];
+  if(the){
+    return the;
+  }
+  return allTypeList[type];
+}
 
 let chatRecordDataData = props.chatRecordData.getData();
 //加载聊天记录，如果有的话
@@ -112,7 +121,7 @@ defineExpose({
       </div>
       <TransitionGroup name="messageList">
         <template class="messagesBox" v-for="message in messages" :key="message.id">
-          <component v-if="messageTypes[message.type]" :is="messageTypes[message.type]" :data="message.data"
+          <component v-if="getMessageType(message.type)" :is="getMessageType(message.type)" :data="message.data"
             ref="message.ref"></component>
           <div v-else>错误!找不到组件:{{ message.type }}</div>
         </template>

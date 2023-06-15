@@ -98,6 +98,7 @@ let data = props.data;
     white-space: pre-wrap;
     margin: 0;
     font-size: 1rem;
+    font-family: auto;
 }
 
 .bubble {

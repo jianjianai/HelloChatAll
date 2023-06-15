@@ -2,7 +2,7 @@
 import Input from './Input.vue';
 import Messages from './Messages.vue';
 import { type ChatWorker } from './ai/ChatWorker';
-import { nextTick, ref, type Ref } from 'vue';
+import { nextTick, onMounted, ref, type Ref } from 'vue';
 import RightBox from './RightBox.vue';
 import type { ChatRecordData } from '../ChatRecordData';
 
@@ -11,7 +11,7 @@ let props = defineProps<{
   chatWorker: ChatWorker,
   chatRecordData: ChatRecordData
 }>();
-
+const isLoaded = ref(false);
 const messageApi = ref();
 const inputApi = ref();
 
@@ -19,10 +19,10 @@ const inputApi = ref();
 //聊天
 let sendingMessage: any = undefined;
 
-
-nextTick(() => {
+onMounted(()=>{
   //初始化chatworker
   props.chatWorker.init(props.chatRecordData,messageApi.value.addNewMessage);
+  isLoaded.value = true;
   //加载上一次的正在输入
   let message = messageApi.value.messages[messageApi.value.messageNextId - 1];
   if (message && message.type==="AllUserMessage") {
@@ -49,7 +49,7 @@ nextTick(() => {
       }
     }
   }
-})
+});
 
 /**
  * 回调函数，当用于发送消息时
@@ -102,13 +102,12 @@ function onInputMessage(message: string) {
 <template>
   <div class="chatbox" v-if="props.chatWorker">
     <div class="message">
-      <Messages ref=messageApi :chatRecordData="props.chatRecordData">
-        <component :is="props.chatWorker.getChatVue()" :chatWorker="props.chatWorker"></component>
+      <Messages ref=messageApi :chatRecordData="props.chatRecordData" :chatWorker="props.chatWorker">
+        <component v-if="isLoaded" :is="props.chatWorker.getChatVue()" :chatWorker="props.chatWorker"></component>
       </Messages>
     </div>
     <div class="imput">
-      <Input ref=inputApi :chatRecordData="props.chatRecordData" @onSendMessage=onSendMessage
-        @onInputMessage=onInputMessage></Input>
+      <Input ref=inputApi @onSendMessage=onSendMessage @onInputMessage=onInputMessage></Input>
     </div>
   </div>
   <RightBox v-else>

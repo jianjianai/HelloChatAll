@@ -1,12 +1,10 @@
 <script lang="ts" setup>
-import { inject, ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue';
 import Send from '../../assets/icon/SendIcon.vue';
 import { useThemeColor } from '../ThemeColor';
-import type { ChatRecordData } from '../ChatRecordData';
 let emit = defineEmits(["onInputMessage", "onSendMessage"]);
 
 let props = defineProps<{
-  chatRecordData: ChatRecordData
 }>();
 
 let inputText = ref("");

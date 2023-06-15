@@ -1,22 +1,36 @@
 import type { ChatRecordData } from "@/components/ChatRecordData";
-import type { ChatWorker } from "../ChatWorker";
-import type { DefineComponent } from "vue";
+import type { AddMessageFun, ChatWorker, MyDefineComponent } from "../ChatWorker";
+import { readonly, type DefineComponent, markRaw } from "vue";
 import BingChat from "./BingChat.vue";
+import BingChatMessage from "./types/BingChatMessage.vue";
+import { BingChatMessageData } from "./types/BingChatMessageData";
 
+let bingTypeList:{[type:string]:MyDefineComponent} = readonly({
+    "BingChatMessage":markRaw(BingChatMessage)
+});
 
 class BingChatWorker implements ChatWorker {
-    addMessage?:((type: string, data: object) => void);
+
+    addMessage:AddMessageFun = ()=>{console.warn("未初始化？？？？？")};
     chatRecordData?:ChatRecordData;
-    init(chatRecordData: ChatRecordData, addMessage: (type: string, data: object) => void): void {
+
+    getTypeList(): { [type: string]: DefineComponent; } {
+        return bingTypeList;
+    }
+
+    init(chatRecordData: ChatRecordData, addMessage:AddMessageFun): void {
         this.addMessage = addMessage;
         this.chatRecordData = chatRecordData;
     }
+
     async sendMessage(message: string) {
-        console.log(message)
+        this.addMessage("BingChatMessage",new BingChatMessageData(message));
+        console.log(message);
     }
-    getChatVue(): DefineComponent<any,any,any,any,any,any,any,any,any,any> {
+
+    getChatVue(): MyDefineComponent {
         return BingChat
     }
 }
 
-export { BingChatWorker };
+export {BingChatWorker};
