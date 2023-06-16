@@ -25,9 +25,8 @@ class TestChatWork implements ChatWorker {
         return TestChat;
     }
     async sendMessage(message: string): Promise<void> {
-        let addMessage = this.addMessage as AddMessageFun;
         let messageData = reactive(new TestChatMessageData(message));
-        addMessage("testMessage",messageData);
+        this.addMessage!("testMessage",messageData);
         for(let i=0;i<=message.length;i++){
             messageData.message = message.substring(0,i);
             await new Promise((e)=>{setTimeout(e, 100);})

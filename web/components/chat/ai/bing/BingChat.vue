@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { inject, ref, watchEffect } from 'vue';
+import { inject, ref, watchEffect, type Ref } from 'vue';
 import { useThemeColor,ThemeColorManager } from '@/components/ThemeColor';
-import type { BingChatWorker } from './BingChatWorker';
+import type { BingChatWorker,ToneType } from './BingChatWorker';
 
 let props = defineProps<{
     chatWorker:BingChatWorker
@@ -12,10 +12,9 @@ const colorA = { r: 146, g: 91, b: 255 };
 const colorB = { r: 0, g: 137, b: 255 };
 const colorC = { r: 0, g: 154, b: 199 };
 
-// {"Creative","Balanced","Precise"}
-const useChatType = ref("Balanced");
+const useChatType = props.chatWorker.tone!;
 
-const switchColorFuns:{[name:string]:Function} = {
+const switchColorFuns = {
     "Creative": () => {ThemeColorManager.useBingA()},
     "Balanced": () => {ThemeColorManager.useBingB()},
     "Precise": () => {ThemeColorManager.useBingC()}

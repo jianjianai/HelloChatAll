@@ -1,4 +1,4 @@
-import { markRaw, reactive, ref, watchEffect, type Ref, type Raw } from "vue";
+import { markRaw, reactive, ref, watchEffect, type Ref, type Raw, watch } from "vue";
 
 //聊天记录列表 {id:{id,name}}
 let chatRecords:{[id:string]:{id:string,name:string}} = reactive({});
@@ -42,7 +42,11 @@ class ChatRecordData {
     name:string,
     aiID?:string
   };
+
   data:{[name:string]:unknown}|undefined; //聊天记录数据对象
+  lastDataSave:number=0;//上次数据保存的时间
+  dataSaveTimeOutID?:number;//定时器id
+
   runTime:{[name:string]:unknown} = reactive({});
   constructor(listObj:{id:string,name:string}) {
     this.listObj = reactive(listObj);
@@ -78,8 +82,34 @@ class ChatRecordData {
           this.data = reactive(obj);
         }
       }
-      watchEffect(() => {
+      const save = ()=>{
+        this.lastDataSave = Date.now();
         localStorage["ChatRecord--" + this.listObj.id] = JSON.stringify(this.data);
+      }
+
+      //节流保存
+      watch(this.data!,() => {
+        if(this.dataSaveTimeOutID===undefined){
+          save();
+          // console.log("save1")
+          this.dataSaveTimeOutID = setTimeout(()=>{
+            this.dataSaveTimeOutID=undefined;
+          },500);
+        }else if((this.lastDataSave+500)<Date.now()){
+          clearTimeout(this.dataSaveTimeOutID);
+          this.dataSaveTimeOutID = setTimeout(()=>{
+            this.dataSaveTimeOutID=undefined;
+          },500);
+          save();
+          // console.log("save2")
+        }else{
+          clearTimeout(this.dataSaveTimeOutID);
+          this.dataSaveTimeOutID = setTimeout(()=>{
+            this.dataSaveTimeOutID=undefined;
+            save();
+            // console.log("save3")
+          },500);
+        }
       });
     }
     return this.data as {[name:string]:Object};
