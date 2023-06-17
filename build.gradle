@@ -26,10 +26,8 @@ build{
     exec {
         workingDir "$projectDir/"
         if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-            commandLine 'cmd', '/c', 'npm install'
             commandLine 'cmd', '/c', 'npm run build'
         } else {
-            commandLine 'sh', '-c', 'npm install'
             commandLine 'sh', '-c', 'npm run build'
         }
     }
