@@ -140,10 +140,10 @@ public class HttpProxy implements HttpHandler {
     }
     void returnError(Throwable message,String type,HttpExchange exchange){
         try (exchange) {
-            exchange.getResponseHeaders().set("Content-Type","text/html; charset="+defaultCharsetName);
-            exchange.getResponseHeaders().set("ProxyErrorType",type==null?"null":type);
+            exchange.getResponseHeaders().set("Content-Type", "text/html; charset=" + defaultCharsetName);
+            exchange.getResponseHeaders().set("ProxyErrorType", type == null ? "null" : type);
             exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
-            exchange.sendResponseHeaders(400,0);
+            exchange.sendResponseHeaders(400, 0);
             PrintStream printStream = new PrintStream(exchange.getResponseBody());
             message.printStackTrace(printStream);
         } catch (IOException ignored) {
