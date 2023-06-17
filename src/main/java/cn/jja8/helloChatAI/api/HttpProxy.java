@@ -17,7 +17,9 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public class HttpProxy implements HttpHandler {
     static String defaultCharsetName = Charset.defaultCharset().name().toLowerCase();
@@ -58,7 +60,16 @@ public class HttpProxy implements HttpHandler {
                 httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
 
                 httpURLConnection.setRequestMethod(exchange.getRequestMethod());
-                headers.forEach(httpURLConnection::addRequestProperty);//拷贝请求头请求头
+
+                //拷贝请求头请求头
+                HttpURLConnection finalHttpURLConnection = httpURLConnection;
+                List<String> excludeRequest = List.of("");
+                headers.forEach((s, s2) -> {
+                    if(!excludeRequest.contains(s)){
+                        finalHttpURLConnection.addRequestProperty(s,s2);
+                    }
+                });
+
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.connect();
 
@@ -67,14 +78,16 @@ public class HttpProxy implements HttpHandler {
 
 
                 //拷贝返回头
+                List<String> excludeResponse = List.of("Location");
                 httpURLConnection.getHeaderFields().forEach((s, strings) -> {
-                    if(s!=null && !s.equals("Location")){
+                    if(s!=null && !excludeResponse.contains(s)){
                         strings.forEach(s1 -> {
                             exchange.getResponseHeaders().add(s,s1);
                         });
                     }
                 });
 
+                exchange.getResponseHeaders().set("Access-Control-Allow-Origin","*");
                 //拷贝返回代码
                 exchange.sendResponseHeaders(httpURLConnection.getResponseCode(),0);
 
@@ -93,6 +106,13 @@ public class HttpProxy implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange){
         try {
+            if("OPTIONS".equals(exchange.getRequestMethod())){
+                exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+                exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "*");
+                exchange.sendResponseHeaders(200,0);
+                exchange.close();
+                return;
+            }
             String proxyStringData = exchange.getRequestHeaders().getFirst("ProxyData");
             if(proxyStringData==null){
                 returnError("未指定代理数据","NoProxyData",exchange);

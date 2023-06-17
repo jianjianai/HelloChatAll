@@ -21,7 +21,9 @@ async function proxyFetch(
                 headers:{
                     ProxyData:encodeURI(JSON.stringify({
                         url:url,
-                        headers:init?.headers
+                        headers:{
+                            ...init?.headers
+                        }
                     }))
                 },
                 method:init?.method,
