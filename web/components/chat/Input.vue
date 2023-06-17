@@ -4,8 +4,6 @@ import Send from '../../assets/icon/SendIcon.vue';
 import { useThemeColor } from '../ThemeColor';
 let emit = defineEmits(["onInputMessage", "onSendMessage"]);
 
-let props = defineProps<{
-}>();
 
 let inputText = ref("");
 

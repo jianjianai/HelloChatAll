@@ -2,9 +2,6 @@
 import RightBox from './chat/RightBox.vue';
 import BingAllSetUp from './chat/ai/bing/BingAllSetUp.vue';
 
-let props = defineProps<{
-
-}>();
 
 </script>
 
