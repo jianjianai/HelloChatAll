@@ -4,8 +4,11 @@
 
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
+image:
+  file: .gitpod.Dockerfile
+
 tasks:
-  - init: sdk install java 17.0.7-amzn && sdk default java 17.0.7-amzn && ./gradlew shadow
+  - init: ./gradlew shadow
     command: java -jar ./build/libs/HelloChatAll-1.0-SNAPSHOT-all.jar
 
 
