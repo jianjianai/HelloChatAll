@@ -5,6 +5,8 @@ import { type ChatWorker } from './ai/ChatWorker';
 import { nextTick, onMounted, ref, type Ref } from 'vue';
 import RightBox from './RightBox.vue';
 import type { ChatRecordData } from '../ChatRecordData';
+import type { AllUserMessageData } from './ai/all/AllUserMessageData';
+import type { AllUserMessage } from './Messages';
 
 
 let props = defineProps<{
@@ -15,9 +17,8 @@ const isLoaded = ref(false);
 const messageApi = ref();
 const inputApi = ref();
 
-
 //聊天
-let sendingMessage: any = undefined;
+let sendingMessage: AllUserMessage|undefined = undefined;
 
 onMounted(()=>{
   //初始化chatworker
@@ -59,20 +60,21 @@ function onSendMessage(message: string) {
     return;
   }
   if (!sendingMessage) {
-    sendingMessage = messageApi.value.addNewMessage("AllUserMessage", { message });
+    let data:AllUserMessageData = {message:message,isPreview:false,isSending:true,isFall:false};
+    sendingMessage = messageApi.value.addNewMessage("AllUserMessage", data);
   }
-  sendingMessage.data.message = message;
-  sendingMessage.data.isPreview = false;
-  sendingMessage.data.isSending = true;
+  sendingMessage!.data.message = message;
+  sendingMessage!.data.isPreview = false;
+  sendingMessage!.data.isSending = true;
 
 
   let fSendingMessage = sendingMessage;
   //传递消息worker
-  props.chatWorker.sendMessage(message).then(()=>{
-    fSendingMessage.data.isSending = false;
+  props.chatWorker.sendMessage(message,fSendingMessage!).then(()=>{
+    fSendingMessage!.data.isSending = false;
   }).catch((error)=>{
     console.warn(error);
-    fSendingMessage.data.isFall = true;
+    fSendingMessage!.data.isFall = true;
   });
 
   sendingMessage = undefined;
@@ -86,9 +88,10 @@ function onSendMessage(message: string) {
 function onInputMessage(message: string) {
   if (message) {
     if (!sendingMessage) {
-      sendingMessage = messageApi.value.addNewMessage("AllUserMessage", { message, isPreview: true });
+      let data:AllUserMessageData = {message:message,isPreview:true,isSending:false,isFall:false};
+      sendingMessage = messageApi.value.addNewMessage("AllUserMessage", data);
     }
-    sendingMessage.data.message = message;
+    sendingMessage!.data.message = message;
   } else {
     if (sendingMessage) {
       sendingMessage.delete();

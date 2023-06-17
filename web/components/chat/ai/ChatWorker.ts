@@ -1,5 +1,6 @@
 import type { DefineComponent } from "vue";
 import { ChatRecordData } from "../../ChatRecordData"
+import type { AllUserMessage } from "../Messages";
 
 type AddMessageFun = (type: string, data: object) => void;
 type MyDefineComponent = DefineComponent<any, any, any, any, any, any, any, any, any, any>;
@@ -25,8 +26,9 @@ interface ChatWorker {
     getChatVue(): MyDefineComponent
     /**
      * 发送消息
+     * @param userMessage 用户消息对象
      */
-    sendMessage(message: string): Promise<void>;
+    sendMessage(message: string,userMessage:AllUserMessage): Promise<void>;
 
 }
 export { type ChatWorker, type AddMessageFun, type MyDefineComponent };

@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { markRaw, reactive, ref, type Raw, type DefineComponent, toRaw, watchEffect, readonly } from 'vue';
+import { markRaw, reactive, ref, type Raw, type DefineComponent, toRaw, watchEffect, readonly, watch } from 'vue';
 import { useAutoScrolling } from '../useAutoScrolling';
 import { useThemeColor } from '../ThemeColor';
 import type { ChatRecordData } from '../ChatRecordData';
 import type { ChatWorker } from './ai/ChatWorker';
 import { allTypeList } from './ai/all/AllTypeList';
+import type { Message } from './Messages';
 
-class Message {
+class MyMessage implements Message{
   id: string;
   type: string;
   data: Object;
@@ -30,7 +31,7 @@ let props = defineProps<{
 }>();
 
 let messageTypes = props.chatWorker.getTypeList();
-let messages: { [id: string]: Message } = reactive({});
+let messages: { [id: string]: MyMessage } = reactive({});
 let messageNextId = ref(1);
 let chatBoxDom = ref();
 
@@ -70,8 +71,6 @@ function getNextMessageId(): string {
 }
 
 
-
-
 function addMessage(message: { type: string, data: Object }, id?: string) {
   let theId;
   if (id) {
@@ -85,11 +84,11 @@ function addMessage(message: { type: string, data: Object }, id?: string) {
   } else {
     theId = getNextMessageId();
   }
-  let theMessage = markRaw(new Message(theId, message.type, message.data))
+  let theMessage = markRaw(new MyMessage(theId, message.type, message.data))
   messages[theId] = theMessage;
 
   //监视消息变化
-  watchEffect(() => {
+  watch(theMessage.data,() => {
     update(theMessage.id, theMessage.type, toRaw(theMessage.data));
   });
   return theMessage;
@@ -97,7 +96,7 @@ function addMessage(message: { type: string, data: Object }, id?: string) {
 /**
  * 添加一条消息
  */
-function addNewMessage(type: string, data: object): Raw<Message> {
+function addNewMessage(type: string, data: object): Raw<MyMessage> {
   return addMessage({ type, data });
 }
 

@@ -1,12 +1,9 @@
 <script lang="ts" setup>
+import type { AllUserMessageData } from './AllUserMessageData';
+
 
 let props = defineProps<{
-    data: {
-        message: string,
-        isPreview: boolean,
-        isSending: boolean,
-        isFall:boolean,
-    }
+    data:AllUserMessageData
 }>();
 let data = props.data;
 

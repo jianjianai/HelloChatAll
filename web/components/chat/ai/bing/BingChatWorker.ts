@@ -5,6 +5,7 @@ import BingChat from "./BingChat.vue";
 import BingChatMessage from "./types/BingChatMessage.vue";
 import { BingChatMessageData } from "./types/BingChatMessageData";
 import { createChat } from "./chatWork/createChat";
+import type { AllUserMessage } from "../../Messages";
 
 let bingTypeList: { [type: string]: MyDefineComponent } = readonly({
     "BingChatMessage": markRaw(BingChatMessage)
@@ -96,10 +97,13 @@ export class BingChatWorker implements ChatWorker {
     }
 
 
-    async sendMessage(message: string) {
-        createChat();
-        this.addMessage!("BingChatMessage", new BingChatMessageData(message));
-        console.log(message);
+    async sendMessage(message: string,userMessage:AllUserMessage) {
+        let re =await createChat();
+        console.log(re);
+        if(!re.chat){
+            userMessage.data.isFall = true;
+        }
+        this.addMessage!("BingChatMessage", new BingChatMessageData(re.chat+""));
     }
 }
 

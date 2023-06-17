@@ -29,7 +29,6 @@ async function proxyFetch(
                 method:init?.method,
                 body:init?.body
             });
-            
         }else{
             r = await fetch(url,init);
         }

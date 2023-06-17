@@ -2,7 +2,11 @@ import { proxyFetch } from "@/components/ProxyWorker";
 import { BingAllSetUp } from "../BingAllSetUp";
 
 export class Chat {
-
+    constructor(
+        public clientId:string,
+        public conversationId:string,
+        public conversationSignature:string
+        ){}
 }
 
 /**
@@ -43,8 +47,52 @@ export async function createChat(): Promise<{
         }
     }, BingAllSetUp.porxyServer.value);
 
-
     
-    console.log(await r.text());
-    return {};
+    if(!r.ok){
+        if(r.headers.has('ProxyErrorType')){
+            return{
+                error:{
+                    type:"NoOk",
+                    message:await r.text()
+                }
+            }
+        }
+        return{
+            error:{
+                type:"NoOk",
+                message:"请求错误，错误代码"+r.status
+            }
+        }
+    }
+    let obj:{
+        result:{
+            message:string|null,
+            value:string
+        },
+        clientId?:string,
+        conversationId?:string,
+        conversationSignature?:string
+    };
+    try{
+        obj = await r.json();
+    }catch(error){
+        return{
+            error:{
+                type:"NoJson",
+                message:error+""
+            }
+        }
+    }
+    if(obj.result.value==="Success"){
+        return{
+            chat:new Chat(obj.clientId!,obj.conversationId!,obj.conversationSignature!)
+        }
+    }else{
+        return{
+            error:{
+                type:obj.result.value,
+                message:obj.result.message+""
+            }
+        }
+    }
 }
