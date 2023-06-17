@@ -41,7 +41,7 @@ build{
 //        } else {
 //            commandLine 'sh', '-c', 'rm -rf dist'
 //        }
-//    }
+//    
 //}
 
 processResources{
