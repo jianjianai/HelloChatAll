@@ -87,6 +87,8 @@ function addMessage(message: { type: string, data: Object }, id?: string) {
   let theMessage = markRaw(new MyMessage(theId, message.type, message.data))
   messages[theId] = theMessage;
 
+  //立即保存一次
+  update(theMessage.id, theMessage.type, toRaw(theMessage.data));
   //监视消息变化
   watch(theMessage.data,() => {
     update(theMessage.id, theMessage.type, toRaw(theMessage.data));
