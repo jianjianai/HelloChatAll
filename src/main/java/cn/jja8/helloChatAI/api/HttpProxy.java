@@ -58,7 +58,13 @@ public class HttpProxy implements HttpHandler {
             try{
                 httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
 
-                httpURLConnection.setRequestMethod(exchange.getRequestMethod());
+                String mode = exchange.getRequestMethod();
+                boolean isGet = "GET".equals(mode);
+                httpURLConnection.setRequestMethod(mode);
+                if(!isGet){
+                    httpURLConnection.setDoOutput(true);
+                }
+
 
                 //拷贝请求头请求头
                 HttpURLConnection finalHttpURLConnection = httpURLConnection;
@@ -69,12 +75,13 @@ public class HttpProxy implements HttpHandler {
                     }
                 });
 
-                httpURLConnection.setDoOutput(true);
+
                 httpURLConnection.connect();
 
-                //拷贝请求体
-                IOStream.copy(exchange.getRequestBody(),httpURLConnection.getOutputStream());
-
+                if(!isGet){
+                    //拷贝请求体
+                    IOStream.copy(exchange.getRequestBody(),httpURLConnection.getOutputStream());
+                }
 
                 //拷贝返回头
                 List<String> excludeResponse = List.of("Location");
