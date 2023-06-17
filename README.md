@@ -8,7 +8,14 @@ Java后端，vue前端。
 
 ## 构建
 
-首先需要准备好 jdk17 和 node.js 环境。之后执行构建命令。
+首先需要准备好 jdk17 和 node.js 环境。
+
+初始化项目
+~~~
+npm install
+~~~
+
+之后执行构建命令。
 ~~~
 ./gradlew shadow
 ~~~
