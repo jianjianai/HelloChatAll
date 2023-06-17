@@ -4,6 +4,7 @@ import { readonly, type DefineComponent, markRaw, toRef, ref, type Ref, type ToR
 import BingChat from "./BingChat.vue";
 import BingChatMessage from "./types/BingChatMessage.vue";
 import { BingChatMessageData } from "./types/BingChatMessageData";
+import { createChat } from "./chatWork/createChat";
 
 let bingTypeList: { [type: string]: MyDefineComponent } = readonly({
     "BingChatMessage": markRaw(BingChatMessage)
@@ -71,6 +72,10 @@ export class BingChatWorker implements ChatWorker {
      * 聊天是否已经开始
      */
     isStart?: Ref<boolean>;
+    /**
+     * 聊天开始时间
+     */
+    startTime?:Ref<string>;
 
 
     getTypeList(): { [type: string]: DefineComponent; } {
@@ -83,6 +88,7 @@ export class BingChatWorker implements ChatWorker {
         let data = this.chatRecordData.getData();
         this.tone = toRef(data, "ChatTone", "Balanced") as any;
         this.isStart = toRef(data, "isStart", true) as any;
+        this.startTime = toRef(data,"startTime") as any;
     }
 
     getChatVue(): MyDefineComponent {
@@ -91,6 +97,7 @@ export class BingChatWorker implements ChatWorker {
 
 
     async sendMessage(message: string) {
+        createChat();
         this.addMessage!("BingChatMessage", new BingChatMessageData(message));
         console.log(message);
     }

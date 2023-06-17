@@ -129,6 +129,7 @@ public class HttpProxy implements HttpHandler {
         try (exchange) {
             exchange.getResponseHeaders().set("Content-Type", "text/html; charset=" + defaultCharsetName);
             exchange.getResponseHeaders().set("ProxyErrorType", type == null ? "null" : type);
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
             exchange.sendResponseHeaders(400, 0);
             exchange.getResponseBody().write(message.getBytes());
         } catch (IOException ignored) {
@@ -141,6 +142,7 @@ public class HttpProxy implements HttpHandler {
         try (exchange) {
             exchange.getResponseHeaders().set("Content-Type","text/html; charset="+defaultCharsetName);
             exchange.getResponseHeaders().set("ProxyErrorType",type==null?"null":type);
+            exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
             exchange.sendResponseHeaders(400,0);
             PrintStream printStream = new PrintStream(exchange.getResponseBody());
             message.printStackTrace(printStream);

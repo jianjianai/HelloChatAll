@@ -1,4 +1,4 @@
-import { reactive, watchEffect } from "vue";
+import { reactive, watch } from "vue";
 
 let setUpMap:{[name:string]:Object} = {};
 
@@ -16,7 +16,7 @@ export default class SetUpManager{
             }
             let re = reactive(JSON.parse(data));
             setUpMap[wathname] = re;
-            watchEffect(()=>{
+            watch(re,()=>{
                 localStorage[wathname] = JSON.stringify(re);
             });
         }

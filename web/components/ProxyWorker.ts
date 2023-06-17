@@ -8,7 +8,7 @@ let porxyConfig:{
 
 async function proxyFetch(
     url:string,
-    init:{
+    init?:{
         method?:"POST"|"GET",
         headers?:{[name:string]:string},
         body?:BodyInit
@@ -21,11 +21,11 @@ async function proxyFetch(
                 headers:{
                     ProxyData:encodeURI(JSON.stringify({
                         url:url,
-                        headers:init.headers
+                        headers:init?.headers
                     }))
                 },
-                method:init.method,
-                body:init.body
+                method:init?.method,
+                body:init?.body
             });
             
         }else{

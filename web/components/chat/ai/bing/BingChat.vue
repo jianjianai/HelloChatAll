@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import { inject, ref, watchEffect, type Ref } from 'vue';
-import { useThemeColor,ThemeColorManager } from '@/components/ThemeColor';
-import type { BingChatWorker,ToneType } from './BingChatWorker';
+import { useThemeColor, ThemeColorManager } from '@/components/ThemeColor';
+import type { BingChatWorker, ToneType } from './BingChatWorker';
+import BingAllSetUp from './BingAllSetUp.vue';
 
 let props = defineProps<{
-    chatWorker:BingChatWorker
+    chatWorker: BingChatWorker
 }>();
 
-
+const showAll = ref(false);
 const colorA = { r: 146, g: 91, b: 255 };
 const colorB = { r: 0, g: 137, b: 255 };
 const colorC = { r: 0, g: 154, b: 199 };
@@ -15,9 +16,9 @@ const colorC = { r: 0, g: 154, b: 199 };
 const useChatType = props.chatWorker.tone!;
 
 const switchColorFuns = {
-    "Creative": () => {ThemeColorManager.useBingA()},
-    "Balanced": () => {ThemeColorManager.useBingB()},
-    "Precise": () => {ThemeColorManager.useBingC()}
+    "Creative": () => { ThemeColorManager.useBingA() },
+    "Balanced": () => { ThemeColorManager.useBingB() },
+    "Precise": () => { ThemeColorManager.useBingC() }
 }
 watchEffect(() => {
     //聊天模式切换时切换主题颜色
@@ -36,29 +37,36 @@ watchEffect(() => {
     </h2>
     <div class="theBox">
         <h3>调整偏好设置</h3>
-            <div class="listBox">
+        <div class="listBox">
 
-                <div class="option ca" v-bind:class="{ selected: useChatType === 'Creative' }"
-                    @click="() => { useChatType = 'Creative' }">
-                    <h3>有创造力</h3>
-                    <p>使对话更有创造力</p>
-                </div>
-
-                <div class="option cb" v-bind:class="{ selected: useChatType === 'Balanced' }"
-                    @click="() => { useChatType = 'Balanced' }">
-                    <h3>平衡</h3>
-                    <p>在有创造力和精确之间平衡</p>
-                </div>
-
-                <div class="option cc" v-bind:class="{ selected: useChatType === 'Precise' }"
-                    @click="() => { useChatType = 'Precise' }">
-                    <h3>精确</h3>
-                    <p>使对话更精确</p>
-                </div>
+            <div class="option ca" v-bind:class="{ selected: useChatType === 'Creative' }"
+                @click="() => { useChatType = 'Creative' }">
+                <h3>有创造力</h3>
+                <p>使对话更有创造力</p>
             </div>
+
+            <div class="option cb" v-bind:class="{ selected: useChatType === 'Balanced' }"
+                @click="() => { useChatType = 'Balanced' }">
+                <h3>平衡</h3>
+                <p>在有创造力和精确之间平衡</p>
+            </div>
+
+            <div class="option cc" v-bind:class="{ selected: useChatType === 'Precise' }"
+                @click="() => { useChatType = 'Precise' }">
+                <h3>精确</h3>
+                <p>使对话更精确</p>
+            </div>
+        </div>
+        <p @click="showAll = !showAll" v-if="!showAll" class="BingAllSetUpOpen">展开全局设置</p>
+        <p @click="showAll = !showAll" v-if="showAll" class="BingAllSetUpOpen">收起全局设置</p>
+        <BingAllSetUp v-if="showAll"></BingAllSetUp>
     </div>
 </template>
 <style scoped>
+.BingAllSetUpOpen{
+    text-align: center;
+    cursor: pointer;
+}
 .option {
     width: 10rem;
     height: 5rem;
@@ -112,6 +120,8 @@ watchEffect(() => {
 
 .theBox {
     margin-bottom: 2rem;
+    border-bottom: 0.05rem solid rgba(0, 0, 0, 0.325);
+    padding-bottom: 1rem;
 }
 
 h2 {
