@@ -7,8 +7,7 @@
 image: gitpod/workspace-full
 
 tasks:
-  - before: sdk update && echo y | sdk install java 17.0.3-ms && sdk default java 17.0.3-ms
-    init: npm install && ./gradlew shadow
-    command: java -jar ./build/libs/HelloChatAll-1.0-SNAPSHOT-all.jar
+  - init: sdk update && echo y | sdk install java 17.0.3-ms && sdk default java 17.0.3-ms && npm install
+    command: ./gradlew shadow && java -jar ./build/libs/HelloChatAll-1.0-SNAPSHOT-all.jar
 
 
