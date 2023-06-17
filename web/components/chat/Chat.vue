@@ -74,6 +74,7 @@ function onSendMessage(message: string) {
     fSendingMessage!.data.isSending = false;
   }).catch((error)=>{
     console.warn(error);
+    fSendingMessage!.data.isSending = false;
     fSendingMessage!.data.isFall = true;
   });
 
