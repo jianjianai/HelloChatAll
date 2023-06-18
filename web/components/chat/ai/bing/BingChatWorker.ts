@@ -6,7 +6,7 @@ import BingChatMessage from "./types/BingChatMessage.vue";
 import { BingChatMessageData } from "./types/BingChatMessageData";
 import { Chat, createChat } from "./chatWork/createChat";
 import type { AllUserMessage } from "../../Messages";
-import { type ToneType, OptionsSets } from "./chatWork/aTalk";
+import { type ToneType } from "./chatWork/aTalk";
 
 let bingTypeList: { [type: string]: MyDefineComponent } = readonly({
     "BingChatMessage": markRaw(BingChatMessage)

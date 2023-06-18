@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { inject, ref, watchEffect, type Ref } from 'vue';
 import { useThemeColor, ThemeColorManager } from '@/components/ThemeColor';
-import type { BingChatWorker, ToneType } from './BingChatWorker';
+import type { BingChatWorker } from './BingChatWorker';
 import BingAllSetUp from './BingAllSetUp.vue';
 
 let props = defineProps<{
