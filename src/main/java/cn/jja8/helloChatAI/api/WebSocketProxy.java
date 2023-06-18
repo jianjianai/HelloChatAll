@@ -9,17 +9,17 @@ public class WebSocketProxy implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) {
-
         String queryString = exchange.getRequestURI().getQuery();
         System.out.println(queryString);
 
         String connectionHeader = exchange.getRequestHeaders().getFirst("Connection");
         String upgradeHeader = exchange.getRequestHeaders().getFirst("Upgrade");
-        if(!"GET".equals(exchange.getRequestMethod()) || !"Upgrade".equals(connectionHeader)|| !"websocket".equals(upgradeHeader)){
+        if (!"GET".equals(exchange.getRequestMethod()) || !"Upgrade".equals(connectionHeader)
+                || !"websocket".equals(upgradeHeader)) {
             returnError("不是一个WebSocket请求", "NoWebSocket", exchange);
             return;
         }
-        
+
         exchange.close();
     }
 
