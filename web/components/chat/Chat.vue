@@ -76,6 +76,7 @@ function onSendMessage(message: string) {
     console.warn(error);
     fSendingMessage!.data.isSending = false;
     fSendingMessage!.data.isFall = true;
+    fSendingMessage!.data.errorMessage = ""+error;
   });
 
   sendingMessage = undefined;

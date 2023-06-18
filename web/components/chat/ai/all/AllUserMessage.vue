@@ -27,6 +27,9 @@ let data = props.data;
                     发送失败
                 </div>
             </div>
+            <div class="errorBubble" v-if="data.errorMessage">
+                <pre class="errorMessageBox" v-text="data.errorMessage"></pre>
+            </div>
             <div class="bubble" v-bind:class="{ preview: data.isPreview, sending: data.isSending }" key="message">
                 <pre class="messageBox" v-text="data.message"></pre>
             </div>
@@ -37,6 +40,22 @@ let data = props.data;
 
 
 <style scoped>
+.errorMessageBox{
+    word-break: break-word;
+    white-space: pre-wrap;
+    margin: 0;
+    font-size: 0.3rem;
+    font-family: auto;
+    color: rgb(202, 0, 0);
+}
+.errorBubble{
+    display: inline-block;
+    padding: 0.3rem;
+    max-width: 90%;
+    position: relative;
+}
+
+
 .input-move,
 .input-enter-active,
 .input-leave-active {
@@ -102,7 +121,6 @@ let data = props.data;
     background-color: rgb(255, 255, 255);
     display: inline-block;
     border-radius: 1rem;
-    margin-bottom: 2rem;
     padding: 0.8rem;
     max-width: 90%;
     position: relative;
@@ -118,6 +136,7 @@ let data = props.data;
     flex-wrap: nowrap;
     align-items: flex-end;
     justify-content: flex-start;
+    margin-bottom: 2rem;
 }
 
 </style>

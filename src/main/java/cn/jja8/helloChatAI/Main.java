@@ -4,6 +4,8 @@ import cn.jja8.config.tool.Conf;
 import cn.jja8.config.tool.YamlConfig;
 import cn.jja8.helloChatAI.api.HttpProxy;
 import cn.jja8.helloChatAI.api.Web;
+import cn.jja8.helloChatAI.api.WebSocketProxy;
+
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.File;
@@ -21,6 +23,7 @@ public class Main {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(port),-1);
         httpServer.createContext("/",new Web());
         httpServer.createContext("/HttpProxy",new HttpProxy());
+        httpServer.createContext("/WebSocketProxy", new WebSocketProxy());
 
         System.out.println("当前字符集编码: "+Charset.defaultCharset().name());
         System.out.println("服务器启动: http://localhost:"+port);
