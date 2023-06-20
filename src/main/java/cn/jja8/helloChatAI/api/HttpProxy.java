@@ -41,7 +41,7 @@ public class HttpProxy implements HttpHandler {
 
         @Override
         public String toString() {
-            return "Proxy{" +
+            return "HttpProxy.Proxy{" +
                     "url='" + url + '\'' +
                     ", headers=" + headers +
                     '}';
@@ -133,8 +133,10 @@ public class HttpProxy implements HttpHandler {
             }
             try {
                 new Proxy(proxyJson).start(exchange);
+                return;
             } catch (IOException | URISyntaxException error) {
                 returnError(error, "ProxyError", exchange);
+                return;
             }
         } catch (Throwable e) {
             e.printStackTrace();

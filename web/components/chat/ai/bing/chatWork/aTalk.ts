@@ -24,6 +24,19 @@ export function ATalk(
     returnErrorMessage:(type:string,message:string)=>void
     ){
 
+        new WebSocket("ws://localhost:8080/WebSocketProxy?"+encodeURI(JSON.stringify({
+            url:"https://sydney.bing.com/sydney/ChatHub",
+            headers:{
+                "Accept-Encoding":"gzip, deflate, br",
+                "Accept-Language":"zh-CN,zh;q=0.9",
+                "Cache-Control":"no-cache",
+                "Host":"sydney.bing.com",
+                "Origin":"https://www.bing.com",
+                "Pragma":"no-cache",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
+            }
+        })))
+
 
 }
 

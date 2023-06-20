@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import com.sun.net.httpserver.HttpExchange;
 
 public class ReturnError {
+    static boolean printf = true;
     static String defaultCharsetName = Charset.defaultCharset().name().toLowerCase();
     /**
      * 返回错误
@@ -18,6 +19,9 @@ public class ReturnError {
             exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
             exchange.sendResponseHeaders(400, 0);
             exchange.getResponseBody().write(message.getBytes());
+            if(printf){
+                System.err.println(type+":"+message);
+            }
         } catch (IOException ignored) {
 
         } catch (Throwable e) {
@@ -32,6 +36,10 @@ public class ReturnError {
             exchange.sendResponseHeaders(400, 0);
             PrintStream printStream = new PrintStream(exchange.getResponseBody());
             message.printStackTrace(printStream);
+            if(printf){
+                System.err.print(type+":");
+                message.printStackTrace();
+            }
         } catch (IOException ignored) {
 
         } catch (Throwable e) {
