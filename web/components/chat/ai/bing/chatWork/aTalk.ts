@@ -4,6 +4,8 @@
 
 import { readonly } from "vue";
 import type { Chat } from "./createChat";
+import { WebSocketProxy } from "@/components/proxy/WebSocketProxy";
+import { BingAllSetUp } from "../BingAllSetUp";
 
 
 /**
@@ -11,7 +13,7 @@ import type { Chat } from "./createChat";
  * @param chat 这个聊天
  * @param message 发送的消息
  */
-export function ATalk(
+export function aTalk(
     chat:Chat,
     message:{
         tone: ToneType,
@@ -20,24 +22,41 @@ export function ATalk(
         text: string,
         invocationId: string
     },
-    returnMessagefun:(data:object)=>void,
-    returnErrorMessage:(type:string,message:string)=>void
+    returnMessageFun:(data:object)=>void,
+    returnErrorMessageFun:(type:string,message:string)=>void
     ){
+        let ws = WebSocketProxy.create("wss://sydney.bing.com/sydney/ChatHub",{
+            "Accept-Encoding":"gzip, deflate, br",
+            "Accept-Language":"zh-CN,zh;q=0.9",
+            "Cache-Control":"no-cache",
+            "Host":"sydney.bing.com",
+            "Origin":"https://www.bing.com",
+            "Pragma":"no-cache",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57",
+            "X-forwarded-for":"66.102.109.95"
+        },BingAllSetUp.WebSocketProxyUrl);
+        ws.addEventListener("open",async (event)=>{
+            //发送握手包
+            sendJson(ws,{
+                "protocol": "json",
+                "version": 1
+            });
+        });
+        ws.addEventListener("close",async (event)=>{
 
-        new WebSocket("ws://localhost:8080/WebSocketProxy?"+encodeURI(JSON.stringify({
-            url:"https://sydney.bing.com/sydney/ChatHub",
-            headers:{
-                "Accept-Encoding":"gzip, deflate, br",
-                "Accept-Language":"zh-CN,zh;q=0.9",
-                "Cache-Control":"no-cache",
-                "Host":"sydney.bing.com",
-                "Origin":"https://www.bing.com",
-                "Pragma":"no-cache",
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57"
-            }
-        })))
+        });
+        ws.addEventListener("error",async (event)=>{
 
+        });
+        ws.addEventListener("message",async (event)=>{
+            console.log("accept",event.data)
+        });
+}
 
+async function sendJson(ws:WebSocket,json:Object){
+    let go = JSON.stringify(json) + '\u001e';
+    console.log("send",go)
+    await ws.send(go);
 }
 
 export type ToneType = "Creative" | "Balanced" | "Precise";

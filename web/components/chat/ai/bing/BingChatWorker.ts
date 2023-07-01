@@ -6,7 +6,7 @@ import BingChatMessage from "./types/BingChatMessage.vue";
 import { BingChatMessageData } from "./types/BingChatMessageData";
 import { Chat, createChat } from "./chatWork/createChat";
 import type { AllUserMessage } from "../../Messages";
-import { type ToneType } from "./chatWork/aTalk";
+import { aTalk, type ToneType } from "./chatWork/aTalk";
 
 let bingTypeList: { [type: string]: MyDefineComponent } = readonly({
     "BingChatMessage": markRaw(BingChatMessage)
@@ -59,14 +59,25 @@ export class BingChatWorker implements ChatWorker {
         if (!this.chat!.value) {
             let re = await createChat();
             console.log(re);
-            if(re.chat){
+            if (re.chat) {
                 this.chat!.value = re.chat;
-            }else{//这里是错误了
+            } else {//这里是错误了
                 userMessage.data.isFall = true;
                 userMessage.data.errorMessage = re.error?.message;
                 return;
             }
         }
         let t = this.addMessage!("BingChatMessage", new BingChatMessageData(JSON.stringify(this.chat!.value)));
+
+        aTalk(this.chat!.value, {
+            tone: "Balanced",
+            isStartOfSession: true,
+            timestamp: "",
+            text: message,
+            invocationId: "0"
+        },
+            (data) => { },
+            (type,message) => { }
+        );
     }
 }

@@ -1,12 +1,12 @@
-import SetUpManager from "./SetUpManager"
+import SetUpManager from "../SetUpManager"
 
-let porxyConfig:{
+export let httpProxyFetchConfig:{
     porxyServer?:string
-} = SetUpManager.getSetUpObj("PorxyWorker");
+} = SetUpManager.getSetUpObj("httpProxyFetchConfig");
 
 
 
-async function proxyFetch(
+export async function httpProxyFetch(
     url:string,
     init?:{
         method?:"POST"|"GET",
@@ -34,6 +34,3 @@ async function proxyFetch(
         }
         return r;
 }
-
-
-export {proxyFetch}
