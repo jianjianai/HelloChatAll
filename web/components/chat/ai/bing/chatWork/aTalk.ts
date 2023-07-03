@@ -14,48 +14,93 @@ import { BingAllSetUp } from "../BingAllSetUp";
  * @param message 发送的消息
  */
 export function aTalk(
-    chat:Chat,
-    message:{
+    chat: Chat,
+    message: {
         tone: ToneType,
         isStartOfSession: boolean,
         timestamp: string,
         text: string,
         invocationId: string
     },
-    returnMessageFun:(data:object)=>void,
-    returnErrorMessageFun:(type:string,message:string)=>void
-    ){
-        let ws = WebSocketProxy.create("wss://sydney.bing.com/sydney/ChatHub",{
-            "Accept-Encoding":"gzip, deflate, br",
-            "Accept-Language":"zh-CN,zh;q=0.9",
-            "Cache-Control":"no-cache",
-            "Host":"sydney.bing.com",
-            "Origin":"https://www.bing.com",
-            "Pragma":"no-cache",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57",
-            "X-forwarded-for":"66.102.109.95"
-        },BingAllSetUp.WebSocketProxyUrl);
-        ws.addEventListener("open",async (event)=>{
-            //发送握手包
-            sendJson(ws,{
-                "protocol": "json",
-                "version": 1
-            });
+    returnMessageFun: (data: {type:number,[name:string]:any}) => void,
+    returnErrorMessageFun: (type: string, message: string) => void
+) {
+    let open = false;
+    let close = false;
+    let ws = WebSocketProxy.create("wss://sydney.bing.com/sydney/ChatHub", {
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-CN,zh;q=0.9",
+        "Cache-Control": "no-cache",
+        "Host": "sydney.bing.com",
+        "Origin": "https://www.bing.com",
+        "Pragma": "no-cache",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57",
+        "X-forwarded-for": "66.102.109.95"
+    }, BingAllSetUp.WebSocketProxyUrl);
+    ws.addEventListener("open",async (event)=>{
+        console.log("open",event);
+        sendJson(ws, {//发送握手包
+            "protocol": "json",
+            "version": 1
         });
-        ws.addEventListener("close",async (event)=>{
-
+    })
+    ws.addEventListener("close", async (event) => {
+        if(!close){
+            console.log("异常关闭！");
+        }
+        console.log("close",event);
+    });
+    ws.addEventListener("error", async (event) => {
+        console.log("error",event);
+        returnErrorMessageFun("error","聊天连接出错："+event.type)
+    });
+    ws.addEventListener("message", async (event) => {
+        console.log("accept", event.data)
+        slicing(event.data as string, async (data) => {
+            if (!data.type) { //没有type首次空包，此时可以发送消息
+                if (!open) {
+                    open = true;
+                    //发送ping
+                    await sendJson(ws,{"type":6});
+                    //发送消息
+                    await sendJson(ws,getSendMessageJson(
+                        message.tone,
+                        message.isStartOfSession,
+                        message.timestamp,
+                        message.text,
+                        chat.conversationSignature,
+                        chat.clientId,
+                        chat.conversationId,
+                        message.invocationId
+                    ));
+                }
+            }else if(data.type==3){//type3为关闭
+                close = true;
+                ws.close();
+            }else if(data.type==3){//type6为ping
+                //发送ping
+                await sendJson(ws,{"type":6});
+            } else{//交给处理函数
+                returnMessageFun(data as any);
+            }
         });
-        ws.addEventListener("error",async (event)=>{
-
-        });
-        ws.addEventListener("message",async (event)=>{
-            console.log("accept",event.data)
-        });
+    });
+}
+/**
+ * 将消息切割并解析成json
+ */
+async function slicing(data: string, pipeline: (data: { [name: string]: any }) => void) {
+    let jsonArray = data.split('\u001e');
+    for (let json of jsonArray) {
+        if(json){
+            pipeline(JSON.parse(json));
+        }
+    }
 }
 
-async function sendJson(ws:WebSocket,json:Object){
+async function sendJson(ws: WebSocket, json: object) {
     let go = JSON.stringify(json) + '\u001e';
-    console.log("send",go)
+    console.log("send", go)
     await ws.send(go);
 }
 
@@ -109,17 +154,6 @@ export const OptionsSets = readonly({
     ]
 })
 
-
-function timeString(d: Date) {
-    let year = d.getFullYear();
-    let month = (d.getMonth() + 1).toString().padStart(2, "0");
-    let date = d.getDate().toString().padStart(2, "0");
-    let hour = d.getHours().toString().padStart(2, "0");
-    let minute = d.getMinutes().toString().padStart(2, "0");
-    let second = d.getSeconds().toString().padStart(2, "0");
-    let offset = "+08:00"; // 你可以根据需要修改这个值
-    return year + "-" + month + "-" + date + "T" + hour + ":" + minute + ":" + second + offset;
-}
 
 function getUuid() {
     return URL.createObjectURL(new Blob()).split('/')[3];

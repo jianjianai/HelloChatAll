@@ -1,8 +1,9 @@
 import type { DefineComponent } from "vue";
 import { ChatRecordData } from "../../ChatRecordData"
-import type { AllUserMessage, Message } from "../Messages";
+import type { Message } from "../Messages";
+import type { AllUserMessageData } from "./all/AllUserMessageData";
 
-type AddMessageFun = (type: string, data: object) => Message;
+type AddMessageFun = <T extends Object>(type: string, data: T) => Message<T>;
 type MyDefineComponent = DefineComponent<any, any, any, any, any, any, any, any, any, any>;
 
 /**
@@ -19,7 +20,7 @@ interface ChatWorker {
     /**
      * 初始化
      */
-    init(chatRecordData: ChatRecordData, addMessage: AddMessageFun): void;
+    init(chatRecordData: ChatRecordData, addMessage: AddMessageFun,messages:{ [id: string]: Message<any> }): void;
     /**
      * 获取聊天显示对象
      **/
@@ -28,7 +29,7 @@ interface ChatWorker {
      * 发送消息
      * @param userMessage 用户消息对象
      */
-    sendMessage(message: string,userMessage:AllUserMessage): Promise<void>;
+    sendMessage(message: string,userMessage:Message<AllUserMessageData>): Promise<void>;
 
 }
 export { type ChatWorker, type AddMessageFun, type MyDefineComponent };

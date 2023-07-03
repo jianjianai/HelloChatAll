@@ -7,15 +7,15 @@ import type { ChatWorker } from './ai/ChatWorker';
 import { allTypeList } from './ai/all/AllTypeList';
 import type { Message } from './Messages';
 
-class MyMessage implements Message{
+class MyMessage implements Message<object>{
   id: string;
   type: string;
-  data: Object;
+  data: object;
   ref = ref(undefined);
   /**
    * @param save 当data变化时的回调函数，返回可直接json的对象
    */
-  constructor(id: string, type: string, data: Object) {
+  constructor(id: string, type: string, data: object) {
     this.id = id;
     this.type = type;
     this.data = reactive(data);

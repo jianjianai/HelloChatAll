@@ -5,8 +5,9 @@ import BingChat from "./BingChat.vue";
 import BingChatMessage from "./types/BingChatMessage.vue";
 import { BingChatMessageData } from "./types/BingChatMessageData";
 import { Chat, createChat } from "./chatWork/createChat";
-import type { AllUserMessage } from "../../Messages";
+import type { Message } from "../../Messages";
 import { aTalk, type ToneType } from "./chatWork/aTalk";
+import type { AllUserMessageData } from "../all/AllUserMessageData";
 
 let bingTypeList: { [type: string]: MyDefineComponent } = readonly({
     "BingChatMessage": markRaw(BingChatMessage)
@@ -34,13 +35,18 @@ export class BingChatWorker implements ChatWorker {
      * chat对象
      */
     chat?: Ref<Chat | undefined>;
+    /**
+     * 聊天id，每次对话+1
+     */
+    invocationId?: Ref<number>;
+
 
 
     getTypeList(): { [type: string]: DefineComponent; } {
         return bingTypeList;
     }
 
-    init(chatRecordData: ChatRecordData, addMessage: AddMessageFun): void {
+    init(chatRecordData: ChatRecordData, addMessage: AddMessageFun, messages: { [id: string]: Message<any> }): void {
         this.addMessage = addMessage;
         this.chatRecordData = chatRecordData;
         let data = this.chatRecordData.getData();
@@ -48,6 +54,8 @@ export class BingChatWorker implements ChatWorker {
         this.isStart = toRef(data, "isStart", true) as any;
         this.startTime = toRef(data, "startTime") as any;
         this.chat = toRef(data, "chat") as any;
+        this.invocationId = toRef(data, "invocationId", 1) as any;
+        console.log(messages);
     }
 
     getChatVue(): MyDefineComponent {
@@ -55,7 +63,7 @@ export class BingChatWorker implements ChatWorker {
     }
 
 
-    async sendMessage(message: string, userMessage: AllUserMessage) {
+    async sendMessage(message: string, userMessage: Message<AllUserMessageData>) {
         if (!this.chat!.value) {
             let re = await createChat();
             console.log(re);
@@ -68,16 +76,36 @@ export class BingChatWorker implements ChatWorker {
             }
         }
         let t = this.addMessage!("BingChatMessage", new BingChatMessageData(JSON.stringify(this.chat!.value)));
-
+        this.invocationId!.value++;
+        if (!this.startTime?.value) {
+            this.startTime!.value = timeString(new Date());
+        }
         aTalk(this.chat!.value, {
             tone: "Balanced",
             isStartOfSession: true,
-            timestamp: "",
+            timestamp: this.startTime!.value,
             text: message,
-            invocationId: "0"
+            invocationId: this.invocationId!.value.toString()
         },
-            (data) => { },
-            (type,message) => { }
+            (data) => {
+                console.log(data);
+                t.data.makerMessage = JSON.stringify(data);
+            },
+            (type, message) => {
+                console.log(type, message);
+            }
         );
     }
+}
+
+
+function timeString(d: Date) {
+    let year = d.getFullYear();
+    let month = (d.getMonth() + 1).toString().padStart(2, "0");
+    let date = d.getDate().toString().padStart(2, "0");
+    let hour = d.getHours().toString().padStart(2, "0");
+    let minute = d.getMinutes().toString().padStart(2, "0");
+    let second = d.getSeconds().toString().padStart(2, "0");
+    let offset = "+08:00"; // 你可以根据需要修改这个值
+    return year + "-" + month + "-" + date + "T" + hour + ":" + minute + ":" + second + offset;
 }

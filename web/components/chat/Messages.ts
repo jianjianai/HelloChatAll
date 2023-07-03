@@ -1,10 +1,6 @@
-import type { AllUserMessageData } from "./ai/all/AllUserMessageData";
-
-export interface Message{
-  data:object;
+export interface Message<T extends Object>{
+  id: string;
+  type: string;
+  data:T;
   delete:()=>void;
-}
-
-export interface AllUserMessage extends Message{
-  data:AllUserMessageData;
 }

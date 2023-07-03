@@ -6,7 +6,7 @@ import { nextTick, onMounted, ref, type Ref } from 'vue';
 import RightBox from './RightBox.vue';
 import type { ChatRecordData } from '../ChatRecordData';
 import type { AllUserMessageData } from './ai/all/AllUserMessageData';
-import type { AllUserMessage } from './Messages';
+import type { Message } from './Messages';
 
 
 let props = defineProps<{
@@ -17,12 +17,14 @@ const isLoaded = ref(false);
 const messageApi = ref();
 const inputApi = ref();
 
+
+
 //聊天
-let sendingMessage: AllUserMessage|undefined = undefined;
+let sendingMessage: Message<AllUserMessageData>|undefined = undefined;
 
 onMounted(()=>{
   //初始化chatworker
-  props.chatWorker.init(props.chatRecordData,messageApi.value.addNewMessage);
+  props.chatWorker.init(props.chatRecordData,messageApi.value.addNewMessage,messageApi.value.messages);
   isLoaded.value = true;
   //加载上一次的正在输入
   let message = messageApi.value.messages[messageApi.value.messageNextId - 1];
